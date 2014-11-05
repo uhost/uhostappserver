@@ -1,0 +1,11 @@
+{
+  "Sessiondb": {
+    "host": "localhost",
+    "name": "express"
+  },
+
+  "Webserver": {
+    "port": "8888"
+  }
+
+}

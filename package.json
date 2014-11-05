@@ -1,0 +1,24 @@
+{
+  "author": "Mark C Allen <mark@markcallen.com>",
+  "name": "uhostappserver",
+  "description": "UHost App Server",
+  "version": "0.1.0",
+  "homepage": "http://getuhost.com/",
+  "main": "app",
+  "engines": {
+    "node": "0.10.x"
+  },
+  "dependencies": {
+    "express": "4.x",
+    "morgan": "1.x",
+    "body-parser": "1.x",
+    "cookie-parser": "1.x",
+    "method-override": "1.x",
+    "express-session": "1.x",
+    "mongoose": "3.x",
+    "connect-mongo": "0.4.x",
+    "config": "0.4.x"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {}
+}

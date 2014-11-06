@@ -1,21 +1,28 @@
 var express = require('express');
 var morgan  = require('morgan');
 var bodyParser = require('body-parser')
+var multer  = require('multer')
 var cookieParser = require('cookie-parser');
 var methodOverride = require('method-override')
 var session      = require('express-session')
 var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var ObjectId = Schema.ObjectId;
+var mongodb = require('mongodb');
 var MongoStore = require('connect-mongo')(session);
+var fs = require('fs');
 var sessiondb = require('config').Sessiondb;
 var webserver = require('config').Webserver;
 
-var nmea = require('nmea-0183');
-
 var app = express();
 
-app.use(morgan());
+app.use(morgan('combined'));
 app.use(cookieParser());
-app.use(bodyParser());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json())
+app.use(multer({ dest: './uploads/'}))
 app.use(methodOverride()); // must come after bodyParser
 app.use(session({
   secret:'mysecretcookie',
@@ -28,12 +35,15 @@ app.use(session({
       } else {
         console.log(collection);
       }
-  })
+  }), 
+  resave: true,
+  saveUninitialized: true
 }));
+
 
 var server = require('http').createServer(app);
 server.listen(webserver.port);
 
-app.get('/', function(req, res){
-  res.sendfile('index.html');
+app.get('/', function (req, res) {
+  res.sendFile(__dirname + '/public/index.html');
 });

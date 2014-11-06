@@ -12,10 +12,12 @@
     "express": "4.x",
     "morgan": "1.x",
     "body-parser": "1.x",
+    "multer": "0.1.x",
     "cookie-parser": "1.x",
     "method-override": "1.x",
     "express-session": "1.x",
     "mongoose": "3.x",
+    "mongodb": "1.4.x",
     "connect-mongo": "0.4.x",
     "config": "0.4.x"
   },

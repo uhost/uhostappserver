@@ -1,7 +1,6 @@
 var express = require('express');
 var morgan  = require('morgan');
 var bodyParser = require('body-parser')
-var multer  = require('multer')
 var cookieParser = require('cookie-parser');
 var methodOverride = require('method-override')
 var session      = require('express-session')
@@ -22,7 +21,6 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(bodyParser.json())
-app.use(multer({ dest: './uploads/'}))
 app.use(methodOverride()); // must come after bodyParser
 app.use(session({
   secret:'mysecretcookie',

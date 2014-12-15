@@ -12,6 +12,7 @@ var MongoStore = require('connect-mongo')(session);
 var fs = require('fs');
 var sessiondb = require('config').Sessiondb;
 var webserver = require('config').Webserver;
+var AWS = require('aws-sdk');
 
 var app = express();
 
@@ -37,6 +38,8 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }));
+
+AWS.config.loadFromPath('./awsconfig.json');
 
 
 var server = require('http').createServer(app);

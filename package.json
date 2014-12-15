@@ -18,7 +18,8 @@
     "mongoose": "3.x",
     "mongodb": "1.4.x",
     "connect-mongo": "0.4.x",
-    "config": "0.4.x"
+    "config": "0.4.x",
+    "aws-sdk": "2.1.x"
   },
   "devDependencies": {},
   "optionalDependencies": {}

@@ -41,10 +41,9 @@ app.use(session({
 
 AWS.config.loadFromPath('./awsconfig.json');
 
+var routes = require('./routes');
+routes({app: viasim.app, authorization: viasim.authorization, viasimmodels: viasim.models, models: models});
 
 var server = require('http').createServer(app);
 server.listen(webserver.port);
 
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/public/index.html');
-});

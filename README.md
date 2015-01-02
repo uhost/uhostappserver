@@ -7,6 +7,15 @@ Install
 Install using UHostServer
 
 
+Development
+-----------
+
+Install grunt
+npm install -g grunt-cli
+
+Run
+grunt
+
 License & Authors
 -----------------
 - Author:: Mark Allen (mark@markcallen.com)

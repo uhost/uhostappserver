@@ -1,1 +1,3 @@
 node_modules/
+.rebooted
+npm-debug.log

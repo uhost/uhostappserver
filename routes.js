@@ -10,7 +10,7 @@ var MongoStore = require('connect-mongo')(session);
 var sessiondb = require('config').Sessiondb;
 var webserver = require('config').Webserver;
 var passport = require('passport');
-var authorization= require('./authorization');
+var authorization= require('./authorization')();
 
 var app = express();
 
@@ -38,7 +38,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(authorization);
+app.use(authorization.middleware());
 
 
 module.exports = function(params) {

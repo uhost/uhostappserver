@@ -1,20 +1,23 @@
+var utils = require('../utils');
 
 module.exports = function(params) {
 
   var app = params.app;
   var passport = params.passport;
+  var User = params.models.user;
 
 app.post('/api/account', function (req, res, next) {
     var user = new User();
+    //@TODO move this to the user model
     if (req.body.password == null || req.body.password.length == 0) {
       return next("no password supplied");
     }
     user.setPassword(req.body.password);
-    if (! checkEmail(req.body.email)) {
-      return next(req.body.email + " is not a valid email address.");
-    }
 
     utils.updateModel(req.body, user, function(user) {
+      if (! user.checkEmail()) {
+        return next(user.email + " is not a valid email address.");
+      }
       user.save(function(err) {
         if(err) { 
           if (11000 === err.code) {

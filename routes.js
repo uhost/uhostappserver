@@ -2,10 +2,10 @@ var fs = require('fs');
 
 var express = require('express');
 var morgan  = require('morgan');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
-var methodOverride = require('method-override')
-var session      = require('express-session')
+var methodOverride = require('method-override');
+var session      = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var sessiondb = require('config').Sessiondb;
 var webserver = require('config').Webserver;
@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 app.use(methodOverride()); // must come after bodyParser
 app.use(session({
   secret:'mysecretcookie',
@@ -61,6 +61,4 @@ module.exports = function(params) {
   var server = require('http').createServer(app);
   server.listen(webserver.port);
   console.log("started express at: http://localhost:"+webserver.port);
-}
-
-
+};

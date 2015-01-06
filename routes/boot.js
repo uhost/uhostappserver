@@ -1,9 +1,11 @@
+// boot requests (unauthenicated)
+
+var utils = require('../utils');
 
 module.exports = function(params) {
 
   var app = params.app;
 
-// boot requests (unauthenicated)
 
 function getFullname(instanceid, cb) {
   Server.find({instance: instanceid}, function(err, servers) {
@@ -52,14 +54,6 @@ app.get('/boot/client.rb/:ip', function(req, res, next) {
   });
 });
 
-function fullnameToRole(name) {
-  if (name) {
-    name = name.replace(/\./g, '_');
-  }
-
-  return name
-}
-
 app.get('/boot/first-boot.json/:ip', function(req, res, next) {
   ec2.DescribeInstances({"Filter": [{"Name": "private-ip-address", "Value": req.params.ip}]}, function(err, result) {
     if (err) {
@@ -74,7 +68,7 @@ app.get('/boot/first-boot.json/:ip', function(req, res, next) {
         }
         var response = {};
         response["run_list"] = [];
-        response["run_list"][0] = "role[" + fullnameToRole(fullname) + "]";
+        response["run_list"][0] = "role[" + utils.fullnameToRole(fullname) + "]";
         res.send(JSON.stringify(response));
       });
     }
@@ -83,4 +77,4 @@ app.get('/boot/first-boot.json/:ip', function(req, res, next) {
 
 
 
-}
+};

@@ -3,48 +3,42 @@
 module.exports = function(params) {
 
   var app = params.app;
+  var chef = params.chef;
+  var passport = params.passport;
+  var User = params.models.user;
 
-app.all('/admin/*', function(req, res, next){
+app.all('/admin/*', function(req, res, next) {
   res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
   if (req.isAuthenticated() && req.user && req.user.isadmin) {
     return next();
   } else {
-    res.status(401).send({err: 'Need to login'});
+    // try basic
+    passport.authenticate('basic', function(err, user, info) {
+      if (err) { 
+        console.log(err);
+      }
+      if (!user && !user.isadmin) { 
+        return res.status(401).send({err: 'Need to login'});
+      }
+      req.logIn(user, function(err) {
+        if (err) { 
+          console.log(err);
+        } else if (user.isadmin) {
+          return next();
+        }
+        return res.status(401).send({err: 'Need to login'});
+       });
+    })(req, res, next);
   }
+
 });
 
-// @TODO need to move somewhere
-function verifyEmail(user, cb) {
-  var buffer = new Array(32);
-  uuid.v4(null, buffer, 0);
-  user.verifySalt = uuid.unparse(buffer);
-  return user.save(function (err) {
-    if (err) {
-      next(err);
-    } else {
-      var url = config.servername + "/#verify/" + user.email + "/" + hash(user.email, user.verifySalt);
-      var textData = "Use this URL to verify your account: " + url;
-      var htmlData = "Use this URL to verify your account: <a href=\"" + url + "\">" + url + "</a>";
-      var message = {
-        to: user.email,
-        from: config.senderaddress,
-        subject: 'Verify Account',
-        text: textData,
-        html: htmlData
-      };
-      transport.sendMail(message, function(err){
-        cb(err, "Message Sent");
-      });
-    }
-  });
-}
-
 app.get('/admin/accounts', function (req, res, next) {
-  User.find({}, [], { sort: [['created', -1]]}, function(err, accounts) {
+  User.find({}).sort('-created').exec(function(err, accounts) {
     if (err) {
       return next(err);
     }
-    var results = new Array();
+    var results = [];
     for (var i=0; i < accounts.length; i++) {
       results.push(accounts[i].sanitizeUser());
     }
@@ -52,17 +46,40 @@ app.get('/admin/accounts', function (req, res, next) {
   });
 });
 
-app.get('/admin/account', function (req, res) {
-  res.send(req.user.sanitizeUser());
-});
-
 app.get('/admin/account/:id', function (req, res, next) {
   User.findById(req.params.id, function (err, user) {
     if (err) {
       return next(err);
     }
-    res.send(user.sanitizeUser());
+    if (user) {
+      return res.send(user.sanitizeUser());
+    }
+    else {
+      return res.send("Can't find user: " + req.params.id);
+    }
   });
 });
 
-}
+app.delete('/admin/account/:id', function (req, res, next) {
+  User.findById(req.params.id, function (err, user) {
+    if (err) {
+      return next(err);
+    }
+    if (! user) {
+      return next("Can't find user: " + req.params.id);
+    }
+    chef.chefDeleteUser(user, function(err, result) {
+      if (err) {
+        return next(err);
+      }
+      user.remove(function (err) {
+        if (err) {
+          return next(err);
+        }
+        res.send("Done");
+      });
+    });
+  });
+});
+
+};

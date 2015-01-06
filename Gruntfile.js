@@ -11,8 +11,8 @@ module.exports = function (grunt) {
           }
         },
         concurrent: {
-            dev: ["nodemon:dev", "node-inspector", "watch"],
-            test: ["mochaTest"],
+            dev: ["nodemon:dev", "node-inspector", "shell:chefzero", "watch"],
+            test: ["mochaTest:test"],
             options: {
                 logConcurrentOutput: true
             }
@@ -21,10 +21,16 @@ module.exports = function (grunt) {
           test: {
             options: {
               reporter: 'spec',
-              require: 'coverage/blanket',
               clearRequireCache: true
             },
-            src: ['test/**/*.js']
+            src: ['test/routes/**/*.js']
+          },
+          db: { 
+            options: {
+              reporter: 'spec',
+              clearRequireCache: true
+            },
+            src: ['test/models/**/*.js']
           },
           coverage: {
             options: {
@@ -37,6 +43,14 @@ module.exports = function (grunt) {
             },
             src: ['test/**/*.js']
           },
+        },
+        shell: {
+          chefzero: {
+              command: 'chef-zero'
+          },
+          knife: {
+              command: ['cd chef', 'knife upload .'].join('&&')
+          }
         },
         blanket: {
           options: {},
@@ -84,13 +98,13 @@ module.exports = function (grunt) {
                   livereload: true,
                 }
             },
-            test: {
-              options: {
-                spawn: false,
-              },
-              files: 'test/**/*.js',
-              tasks: ['mochaTest']
-            }
+            //test: {
+            //  options: {
+            //    spawn: false,
+            //  },
+            //  files: 'test/**/*.js',
+            //  tasks: ['mochaTest']
+            //}
         },
         nodemon: {
           dev: {
@@ -114,7 +128,7 @@ module.exports = function (grunt) {
                     // Delay before server listens on port
                     setTimeout(function() {
                       //require('open')('http://localhost:8888');
-                      require('open')('http://127.0.0.1:8080/debug?port=5858');
+                      //require('open')('http://127.0.0.1:8080/debug?port=5858');
                     }, 3000);
                   });
 
@@ -154,10 +168,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-node-inspector');
     grunt.loadNpmTasks('grunt-blanket');
+    grunt.loadNpmTasks('grunt-shell');
 
     grunt.registerTask('default', ['concurrent:dev']);
     grunt.registerTask('lint', ['jshint']);
-    grunt.registerTask('test', ['concurrent:test']);
+    grunt.registerTask('test', ['shell:knife', 'concurrent:test']);
+    grunt.registerTask('testdb', ['mochaTest:db']);
     // @TODO need to get blanket coverage to work
     grunt.registerTask('coverage', ['blanket']);
 };

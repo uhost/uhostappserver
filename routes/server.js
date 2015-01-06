@@ -2,6 +2,10 @@
 module.exports = function(params) {
 
   var app = params.app;
+  var chef = params.chef;
+  var User = params.models.user;
+  var Server = params.models.server;
+  var ServerAction = params.models.serveraction;
 
 // Server
 
@@ -12,7 +16,7 @@ function LogServerAction(server, user, action, cb) {
   serverAction.userid = user.id;
   serverAction.action = action;
   serverAction.save(function(err) {
-    cb(err, serverAction);
+    if (cb) { cb(err, serverAction); }
   });
 }
 
@@ -55,7 +59,7 @@ function getServerInfo(servers, cb) {
             }
           }
         }
-        cb && cb(null, results);
+        if (cb) { cb(null, results); }
       }
     });
   });
@@ -122,76 +126,6 @@ function jiraService(model, jira) {
   model.services.jira = [];
   model.services.jira.push(jira);
   return model;
-}
-
-function chefCreateRole(role, cb) {
-  if (role) {
-    chef.createRole(role, function(err, result) {
-      cb && cb(err, result);
-    });
-  } else {
-    cb && cb(null, "no role to create");
-  }
-}
-
-function chefDeleteRole(rolename, cb) {
-  if (rolename) {
-    chef.deleteRole(rolename, function(err, result) {
-      cb && cb(err, result);
-    });
-  } else {
-    cb && cb(null, "no role to delete");
-  }
-}
-
-function chefGetRole(rolename, cb) {
-  if (rolename) {
-    chef.getRole(rolename, function(err, result) {
-      cb && cb(err, result);
-    });
-  } else {
-    cb && cb(null, "no role to get");
-  }
-}
-
-function chefUpdateRole(rolename, role, cb) {
-  if (role) {
-    chef.editRole(rolename, role, function(err, result) {
-      cb && cb(err, result);
-    });
-  } else {
-    cb && cb(null, "no role to delete");
-  }
-}
-
-
-function chefUser(user) {
-  var chefuser = {};
-  chefuser.id = user.username;
-  chefuser.ssh_keys = user.pubkey;
-  chefuser.comment = user.firstname + " " + user.lastname + " (" + user.email + ")";
-
-  return chefuser;
-}
-          
-function chefCreateUser(user, cb) {
-  if (user) {
-    chef.createDataBagItem('users', chefUser(user), function(err, result) {
-      cb && cb(err, result);
-    });
-  } else {
-    cb && cb(null, "no user to create");
-  }
-}
-
-function chefUpdateUser(user, cb) {
-  if (user) {
-    chef.editDataBagItem('users', user.username, chefUser(user), function(err, result) {
-      cb && cb(err, result);
-    });
-  } else {
-    cb && cb(null, "no user to update");
-  }
 }
 
 app.post('/api/project/:projectid/server', function (req, res, next) {
@@ -262,15 +196,15 @@ app.post('/api/project/:projectid/server', function (req, res, next) {
          if (err) {
            return next(err);
          }
-         chefCreateRole(appServerRole, function(err, result) {
+         chef.chefCreateRole(appServerRole, function(err, result) {
            if (err) {
              return next(err);
            }
-           chefCreateRole(loadBalancerRole, function(err, result) {
+           chef.chefCreateRole(loadBalancerRole, function(err, result) {
              if (err) {
                return next(err);
              }
-             chefCreateRole(serverRole, function(err, result) {
+             chef.chefCreateRole(serverRole, function(err, result) {
                if (err) {
                  return next(err);
                }

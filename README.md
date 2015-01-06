@@ -10,6 +10,10 @@ Install using UHostServer
 Development
 -----------
 
+Install chef-zero
+gem install bundler
+bundle
+
 Install grunt
 npm install -g grunt-cli
 

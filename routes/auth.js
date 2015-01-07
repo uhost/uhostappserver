@@ -57,138 +57,138 @@ module.exports = function(params) {
         }
         ));
 
-  app.all('/auth/*', function(req, res, next) {
-                  res.header("Cache-Control", "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0");
-                  next();
-                  });
+  app.all("/auth/*", function(req, res, next) {
+    res.header("Cache-Control", "no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0");
+    next();
+  });
 
-                  app.post('/auth/login', function(req, res, next) {
-                  var successUrl = (req.body.successUrl != null ? req.body.successUrl : '/#validlogin');
-                  var failureUrl = (req.body.failureUrl != null ? req.body.failureUrl : '/#invalidlogin');
-                  passport.authenticate('local', function(err, user, info) {
-                  if (err) { return next(err); }
-                  if (!user) { return res.redirect(failureUrl); }
-                  req.logIn(user, function(err) {
-                  if (err) { return next(err); }
-                  return res.redirect(successUrl);
-                  });
-                  })(req, res, next);
-                  });
+  app.post('/auth/login', function(req, res, next) {
+    var successUrl = (req.body.successUrl != null ? req.body.successUrl : '/#validlogin');
+    var failureUrl = (req.body.failureUrl != null ? req.body.failureUrl : '/#invalidlogin');
+    passport.authenticate('local', function(err, user, info) {
+      if (err) { return next(err); }
+      if (!user) { return res.redirect(failureUrl); }
+      req.logIn(user, function(err) {
+        if (err) { return next(err); }
+        return res.redirect(successUrl);
+      });
+    })(req, res, next);
+  });
 
-                  app.get('/auth/logout', function(req, res){
-                  req.logOut();
-                  res.redirect('/');
-                  });
+  app.get('/auth/logout', function(req, res){
+    req.logOut();
+    res.redirect('/');
+  });
 
-                  app.post('/auth/forgottenPassword', function (req, res, next){
-                  User.find({username: req.body.username}, function(err, user) {
-                  if (err) {
-                  next(err);
-                  } else if (user == null || user.length != 1 || user[0].username != req.body.username ) {
-                  next("Can not find user for: " + req.body.username);
-                  } else {
-                  var buffer = new Array(32);
-                  uuid.v4(null, buffer, 0);
-                  user[0].recoverSalt = uuid.unparse(buffer);
-                  return user[0].save(function (err) {
-                  if (err) {
-                  next(err); 
-                  } else {
-                  var url = config.servername + "/#recover/" + user[0].username + "/" + hash(user[0].username, user[0].recoverSalt);
-                  var textData = "Use this URL to recover your account: " + url;
-                  var htmlData = "Use this URL to recover your account: <a href=\"" + url + "\">" + url + "</a>";
-                  var message = {
-                  to: user[0].email,
-                  from: config.senderaddress,
-                  subject: 'Forgotten Password',
-                  text: textData,
-                  html: htmlData
-                  };
-                  transport.sendMail(message, function(err){
-                  if (err) {
-                  return next(err);
-                  } else 
-                  return res.send("Message sent");
-                  });
-                  }
-                  });
-                  }
-                  });
-                  });
-
-                  app.post('/auth/recoverAccount', function (req, res, next){
-                  User.find({username: req.body.username}, function(err, user) {
-                  if (err) {
-                  next(err);
-                  } else if (user == null || user.length != 1 || user[0].username != req.body.username ) {
-                  next("Can not find user for: " + req.body.username);
-                  } else {
-                  if(req.body.hash === hash(req.body.username, user[0].recoverSalt)) {
-                  user[0].setPassword(req.body.password);
-                  user[0].recoverSalt = "";
-                  return user[0].save(function (err) {
-                  if (err) {
-    next(err); 
-} else {
-  next();
-}
-});
-} else {
-  next("Can not verify account.");
-}
-}
-});
-}, passport.authenticate('local', { successRedirect: '/#validlogin',
-  failureRedirect: '/#invalidlogin',
-  failureFlash: false }) );
-
-app.post('/auth/changePassword', function (req, res, next){
-  var user = req.user;
-  if (user.isPasswordValid(req.body.oldPassword)) {
-    user.setPassword(req.body.newPassword);
-    return user.save(function (err) {
+  app.post('/auth/forgottenPassword', function (req, res, next){
+    User.find({username: req.body.username}, function(err, user) {
       if (err) {
-        next(err); 
+        next(err);
+      } else if (user == null || user.length != 1 || user[0].username != req.body.username ) {
+        next("Can not find user for: " + req.body.username);
       } else {
-        return res.send(user.sanitizeUser());
+        var buffer = new Array(32);
+        uuid.v4(null, buffer, 0);
+        user[0].recoverSalt = uuid.unparse(buffer);
+        return user[0].save(function (err) {
+          if (err) {
+            next(err); 
+          } else {
+            var url = config.servername + "/#recover/" + user[0].username + "/" + hash(user[0].username, user[0].recoverSalt);
+            var textData = "Use this URL to recover your account: " + url;
+            var htmlData = "Use this URL to recover your account: <a href=\"" + url + "\">" + url + "</a>";
+            var message = {
+              to: user[0].email,
+               from: config.senderaddress,
+               subject: 'Forgotten Password',
+               text: textData,
+               html: htmlData
+            };
+            transport.sendMail(message, function(err){
+              if (err) {
+                return next(err);
+              } else 
+              return res.send("Message sent");
+            });
+          }
+        });
       }
     });
-  } else {
-    next("Invalid Old Password");
-  }
-}); 
-
-
-app.get('/auth/sendVerifyEmail', function (req, res, next) {
-  var user = req.user;
-  verifyEmail(user, function(err, result) {
-    if (err) {
-      next(err);
-    } else {
-      console.log(result);
-      var output = { };
-      output.SendEmailResult = result.SendEmailResult;
-      output.email = req.user.email;
-      return res.send(output);
-    }
   });
-});
 
-app.post('/auth/verifyEmail', function (req, res, next) {
-  var user = req.user;
-  if(req.body.hash === hash(req.body.email, user.verifySalt)) {
-    user.verifiedEmail = true;
-    user.verifySalt = "";
-    return user.save(function (err) {
+  app.post('/auth/recoverAccount', function (req, res, next){
+    User.find({username: req.body.username}, function(err, user) {
+      if (err) {
+        next(err);
+      } else if (user == null || user.length != 1 || user[0].username != req.body.username ) {
+        next("Can not find user for: " + req.body.username);
+      } else {
+        if(req.body.hash === hash(req.body.username, user[0].recoverSalt)) {
+          user[0].setPassword(req.body.password);
+          user[0].recoverSalt = "";
+          return user[0].save(function (err) {
+            if (err) {
+              next(err); 
+            } else {
+              next();
+            }
+          });
+        } else {
+          next("Can not verify account.");
+        }
+      }
+    });
+  }, passport.authenticate('local', { successRedirect: '/#validlogin',
+    failureRedirect: '/#invalidlogin',
+    failureFlash: false }) );
+
+  app.post('/auth/changePassword', function (req, res, next){
+    var user = req.user;
+    if (user.isPasswordValid(req.body.oldPassword)) {
+      user.setPassword(req.body.newPassword);
+      return user.save(function (err) {
+        if (err) {
+          next(err); 
+        } else {
+          return res.send(user.sanitizeUser());
+        }
+      });
+    } else {
+      next("Invalid Old Password");
+    }
+  }); 
+
+
+  app.get('/auth/sendVerifyEmail', function (req, res, next) {
+    var user = req.user;
+    verifyEmail(user, function(err, result) {
       if (err) {
         next(err);
       } else {
-        return res.send('Account verified');
+        console.log(result);
+        var output = { };
+        output.SendEmailResult = result.SendEmailResult;
+        output.email = req.user.email;
+        return res.send(output);
       }
     });
-  } else {
-    next("Can not verify email.");
-  }
-});
+  });
+
+  app.post('/auth/verifyEmail', function (req, res, next) {
+    var user = req.user;
+    if(req.body.hash === hash(req.body.email, user.verifySalt)) {
+      user.verifiedEmail = true;
+      user.verifySalt = "";
+      return user.save(function (err) {
+        if (err) {
+          next(err);
+        } else {
+          return res.send('Account verified');
+        }
+      });
+    } else {
+      next("Can not verify email.");
+    }
+  });
 
 };

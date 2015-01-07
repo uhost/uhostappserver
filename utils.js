@@ -117,6 +117,11 @@ fullnameToRole: function(name) {
   }
 
   return name;
+},
+
+checkDnsName: function(name) {
+  var re = /^(?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|\b-){0,61}[0-9A-Za-z])?(?:\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|\b-){0,61}[0-9A-Za-z])?)*\.?$/;
+  return re.test(name);
 }
 
 };

@@ -18,15 +18,6 @@ module.exports = function(params) {
   mongoose.model('Server', ServerSchema);
   var Server = mongoose.model('Server');
 
-  var ServerActionSchema = new Schema({
-    serverid: {type: ObjectId, required: true},
-    instance: {type: String},
-    userid: {type: ObjectId},
-    action: {type: String, required: true},
-    created: {type: Date, default: Date.now}
-  });
-
-  mongoose.model('ServerAction', ServerActionSchema);
-  var ServerAction = mongoose.model('ServerAction');
+  return Server;
 
 };

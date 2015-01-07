@@ -122,6 +122,135 @@ fullnameToRole: function(name) {
 checkDnsName: function(name) {
   var re = /^(?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|\b-){0,61}[0-9A-Za-z])?(?:\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|\b-){0,61}[0-9A-Za-z])?)*\.?$/;
   return re.test(name);
+},
+
+getRoute53: function(servername, cb) {
+  var params = {
+    HostedZoneId : config.route53.zoneid,
+    Type: 'A',
+    Name: servername.toLowerCase() + '.' + config.route53.domainname 
+  }
+  r53.ListResourceRecordSets(params, function(err, data) {
+    var result = { };
+    if (! err) {
+      for(var rec in data.Body.ListResourceRecordSetsResponse.ResourceRecordSets.ResourceRecordSet) {
+        if (data.Body.ListResourceRecordSetsResponse.ResourceRecordSets.ResourceRecordSet[rec].Name == servername.toLowerCase() + '.' + config.route53.domainname + '.') {
+          result = data.Body.ListResourceRecordSetsResponse.ResourceRecordSets.ResourceRecordSet[rec];
+          break;
+        }
+      }
+    }
+    cb && cb(err, result);
+  });
+},
+
+updateRoute53: function(server, cb) {
+ getRoute53(server.name, function(err, r53data) {
+   if (err) {
+     return cb && cb(err, null);
+   }
+   var resourceRecords = new Array();
+   var changes = new Array();
+   if (r53data.ResourceRecords) {
+     resourceRecords.push(r53data.ResourceRecords.ResourceRecord.Value);
+     changes.push({
+            Action          : 'DELETE',
+            Name            : r53data.Name,
+            Type            : r53data.Type,
+            Ttl             : r53data.TTL,
+            ResourceRecords : resourceRecords
+     });
+   }
+   ec2.DescribeInstances({"InstanceId": [server.instance]}, function(err, result) {
+     if (err) {
+       return cb && cb(err, null);
+      }
+      console.log(result);
+      resourceRecords = new Array();
+      resourceRecords.push(result.reservationSet.item.instancesSet.item.ipAddress);
+      changes.push({
+            Action          : 'CREATE',
+            Name            : server.name.toLowerCase() + '.' + config.route53.domainname + '.',
+            Type            : 'A',
+            Ttl             : '60',
+            ResourceRecords : resourceRecords
+      });
+      var params = {
+         HostedZoneId : config.route53.zoneid,
+         Comment: 'Updating ' + server.name.toLowerCase() + '.' + config.route53.domainname,
+         Changes: changes
+      }
+      r53.ChangeResourceRecordSets(params, function(err, data) {
+        cb && cb(err, data);
+      });
+    });
+  });
+},
+
+cnameRoute53: function(server, cb) {
+ getRoute53(server.name, function(err, r53data) {
+   if (err) {
+     return cb && cb(err, null);
+   }
+   var resourceRecords = new Array();
+   if (r53data.ResourceRecords) {
+     resourceRecords.push(r53data.ResourceRecords.ResourceRecord.Value);
+     var changes = new Array();
+     changes.push({
+            Action          : 'DELETE',
+            Name            : r53data.Name,
+            Type            : r53data.Type,
+            Ttl             : r53data.TTL,
+            ResourceRecords : resourceRecords
+     });
+   }
+   resourceRecords = new Array();
+   resourceRecords.push(config.route53.cname);
+   changes.push({
+            Action          : 'CREATE',
+            Name            : server.name.toLowerCase() + '.' + config.route53.domainname + '.',
+            Type            : 'CNAME',
+            Ttl             : '60',
+            ResourceRecords : resourceRecords
+   });
+   var params = {
+      HostedZoneId : config.route53.zoneid,
+      Comment: 'Deleting ' + server.name.toLowerCase() + '.' + config.route53.domainname,
+      Changes: changes
+   }
+   r53.ChangeResourceRecordSets(params, function(err, data) {
+     cb && cb(err, data);
+   });
+  });
+},
+
+deleteRoute53: function(servername, cb) {
+ getRoute53(servername, function(err, r53data) {
+   if (err) {
+     return cb && cb(err, null);
+   }
+   var resourceRecords = new Array();
+   if (r53data.ResourceRecords) {
+     resourceRecords.push(r53data.ResourceRecords.ResourceRecord.Value);
+     var changes = new Array();
+     changes.push({
+            Action          : 'DELETE',
+            Name            : r53data.Name,
+            Type            : r53data.Type,
+            Ttl             : r53data.TTL,
+            ResourceRecords : resourceRecords
+     });
+   }
+   var params = {
+      HostedZoneId : config.route53.zoneid,
+      Comment: 'Deleting ' + servername.toLowerCase() + '.' + config.route53.domainname,
+      Changes: changes
+   }
+   r53.ChangeResourceRecordSets(params, function(err, data) {
+     cb && cb(err, data);
+   });
+  });
 }
+
 
 };

@@ -33,5 +33,11 @@ module.exports = {
                 models.user.findByIdAndRemove(u.id, function(err, user) {
                   if (cb) { cb(err, user); }
                 });
-              }
+              },
+
+  proj: {
+          name: "mochaproject",
+          fullname: "mochaproject.getuhost.org",
+          size: "tiny"
+        }
 };

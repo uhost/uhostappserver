@@ -80,6 +80,7 @@ module.exports = function(params) {
     res.redirect('/');
   });
 
+  //@TODO: create test
   app.post('/auth/forgottenPassword', function (req, res, next){
     User.find({username: req.body.username}, function(err, user) {
       if (err) {
@@ -107,8 +108,9 @@ module.exports = function(params) {
             transport.sendMail(message, function(err){
               if (err) {
                 return next(err);
-              } else 
-              return res.send("Message sent");
+              } else {
+                return res.send("Message sent");
+              }
             });
           }
         });
@@ -116,6 +118,7 @@ module.exports = function(params) {
     });
   });
 
+  //@TODO: create test
   app.post('/auth/recoverAccount', function (req, res, next){
     User.find({username: req.body.username}, function(err, user) {
       if (err) {
@@ -142,6 +145,7 @@ module.exports = function(params) {
     failureRedirect: '/#invalidlogin',
     failureFlash: false }) );
 
+  //@TODO: create test
   app.post('/auth/changePassword', function (req, res, next){
     var user = req.user;
     if (user.isPasswordValid(req.body.oldPassword)) {
@@ -158,7 +162,7 @@ module.exports = function(params) {
     }
   }); 
 
-
+  //@TODO: create test
   app.get('/auth/sendVerifyEmail', function (req, res, next) {
     var user = req.user;
     verifyEmail(user, function(err, result) {
@@ -174,6 +178,7 @@ module.exports = function(params) {
     });
   });
 
+  //@TODO: create test
   app.post('/auth/verifyEmail', function (req, res, next) {
     var user = req.user;
     if(req.body.hash === hash(req.body.email, user.verifySalt)) {

@@ -1,3 +1,4 @@
+var utils = require('../utils');
 
 module.exports = function(params) {
 
@@ -22,11 +23,6 @@ app.get('/api/projects', function (req, res, next) {
     res.send(projects);
   });
 });
-
-function checkDnsName(name) {
-  var re = /^(?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|\b-){0,61}[0-9A-Za-z])?(?:\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|\b-){0,61}[0-9A-Za-z])?)*\.?$/;
-  return re.test(name);
-}
 
 function addService(project, serverRole, name, service) {
   if (! serverRole.override_attributes.pbp) {
@@ -119,7 +115,7 @@ app.post('/api/project', function (req, res, next) {
   } else {
     project.fullname = req.body.fullname;
   }
-  if (! checkDnsName(project.fullname)) {
+  if (! utils.checkDnsName(project.fullname)) {
     return next(project.fullname + " is not a valid dns name");
   }
   project.userid = user.id;
@@ -197,7 +193,7 @@ app.put('/api/project/:id', function (req, res, next) {
     if (req.body.fullname) {
       project.fullname = req.body.fullname;
     }
-    if (! checkDnsName(project.fullname)) {
+    if (! utils.checkDnsName(project.fullname)) {
       return next(project.fullname + " is not a valid dns name");
     }
     project.save(function(err) {

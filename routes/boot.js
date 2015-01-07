@@ -5,7 +5,8 @@ var utils = require('../utils');
 module.exports = function(params) {
 
   var app = params.app;
-
+  var Server = params.models.server;
+  var Project = params.models.project;
 
 function getFullname(instanceid, cb) {
   Server.find({instance: instanceid}, function(err, servers) {
@@ -22,7 +23,7 @@ function getFullname(instanceid, cb) {
       if (projects.length > 0) {
         return cb && cb(null, projects[0].fullname);
       }
-      return cb && cb("Can't find Project or Server for instanceid", null)
+      return cb && cb("Can't find Project or Server for instanceid", null);
     });
   });
 }

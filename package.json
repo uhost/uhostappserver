@@ -23,6 +23,7 @@
     "express": "4.x",
     "express-session": "1.x",
     "fmt": "0.5.x",
+    "kue": "0.8.x",
     "method-override": "1.x",
     "mongodb": "1.4.x",
     "mongoose": "3.x",

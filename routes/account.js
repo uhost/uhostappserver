@@ -6,6 +6,7 @@ module.exports = function(params) {
   var passport = params.passport;
   var User = params.models.user;
   var chef = params.chef;
+  var jobs = params.jobs;
 
   function createUser(req, res, next) {
     var user = new User();
@@ -18,6 +19,7 @@ module.exports = function(params) {
     }
 
     utils.updateModel(req.body, user, function(user) {
+      user.verifySalt = utils.salt();
       user.save(function(err) {
         if(err) { 
           if (11000 === err.code) {
@@ -31,7 +33,7 @@ module.exports = function(params) {
               //todo: rollback user on error
               return next(err);
             }
-            utils.verifyEmail(user, function(err, result) {
+            var job = jobs.create('verifyemail', { user: user }).save( function(err) {
               if (err) {
                 console.log(err);
               } 

@@ -5,21 +5,9 @@ module.exports = function(params) {
 
   var app = params.app;
   var Project = params.models.project;
-  var ProjectAction = params.models.projectaction;
   var chef = params.chef;
 
   // Project
-
-  function LogProjectAction(project, user, action, cb) {
-    var projectAction = new ProjectAction();
-    projectAction.projectid = project.id;
-    projectAction.instance = project.instance;
-    projectAction.userid = user.id;
-    projectAction.action = action;
-    projectAction.save(function(err) {
-      cb(err, projectAction);
-    });
-  }
 
   app.get('/api/projects', function (req, res, next) {
     Project.find({userid: req.user.id}, function (err, projects) {
@@ -87,12 +75,7 @@ module.exports = function(params) {
               if(err) {
                 if (cb) { cb(err, project); }
               } else {
-                LogProjectAction(project, user, "created", function(err, projectAction) {
-                  if (err) {
-                    console.log(err);
-                  }
-                  if (cb) { cb(null, project); }
-                });
+                if (cb) { cb(null, project); }
               }
             });
           } else {
@@ -133,8 +116,8 @@ module.exports = function(params) {
     };
 
     if (req.body.size) {
-      if (sizeMap[req.body.size]) {
-        project.instance_type = sizeMap[req.body.size];
+      if (utils.sizeMap[req.body.size]) {
+        project.instance_type = utils.sizeMap[req.body.size];
       } else {
         return next("Size: " + req.body.size + " is invalid");
       }
@@ -234,6 +217,7 @@ module.exports = function(params) {
         if (err) {
           console.log(err);
         }
+        //TODO: need to deal with route53/dns differently
         /*
         deleteRoute53(project.name, function(err) {
           if (err) {
@@ -256,12 +240,7 @@ module.exports = function(params) {
                   if (err) {
                     return next(err);
                   }
-                  LogProjectAction(project, user, "terminated", function(err, projectAction) {
-                    if (err) {
-                      console.log(err);
-                    }
-                    return res.send("Done");
-                  });
+                  return res.send("Done");
                 });
                 /*
               });

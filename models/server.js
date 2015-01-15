@@ -9,7 +9,8 @@ module.exports = function(params) {
     name: {type: String, required: true, unique: true},
     fullname: {type: String, required: true},
     projectid: {type: ObjectId, required: true},
-    //services: { nodejs: [NodejsServiceSchema] },
+    platformid: {type: ObjectId, required: true},
+    serviceid: {type: ObjectId, required: true},
     instance: {type: String},
     instance_type: {type: String},
     created: {type: Date, default: Date.now}

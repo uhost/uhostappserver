@@ -35,6 +35,12 @@ module.exports = function(params) {
     return (this.passwordHash === utils.hash(passwordString, this.salt));
   };
 
+  UserSchema.methods.createVerifySalt = function() {
+    var buffer = new Array(32);
+    uuid.v4(null, buffer, 0);
+    this.recoverSalt = uuid.unparse(buffer);
+  };
+
   UserSchema.methods.sanitizeUser = function() {
     var suser = (this !== undefined ? this.toJSON() : undefined);
     if (suser !== undefined) {

@@ -1,3 +1,4 @@
+var utils = require('../utils');
 var LocalStrategy = require('passport-local').Strategy;
 var BasicStrategy = require('passport-http').BasicStrategy;
 
@@ -88,31 +89,17 @@ module.exports = function(params) {
       } else if (user == null || user.length != 1 || user[0].username != req.body.username ) {
         next("Can not find user for: " + req.body.username);
       } else {
-        var buffer = new Array(32);
-        uuid.v4(null, buffer, 0);
-        user[0].recoverSalt = uuid.unparse(buffer);
+        user[0].createVerifySalt();
         return user[0].save(function (err) {
           if (err) {
-            next(err); 
-          } else {
-            var url = config.servername + "/#recover/" + user[0].username + "/" + hash(user[0].username, user[0].recoverSalt);
-            var textData = "Use this URL to recover your account: " + url;
-            var htmlData = "Use this URL to recover your account: <a href=\"" + url + "\">" + url + "</a>";
-            var message = {
-              to: user[0].email,
-               from: config.senderaddress,
-               subject: 'Forgotten Password',
-               text: textData,
-               html: htmlData
-            };
-            transport.sendMail(message, function(err){
-              if (err) {
-                return next(err);
-              } else {
-                return res.send("Message sent");
-              }
-            });
-          }
+            return next(err); 
+          } 
+          utils.verifyEmail(user, function(err, message) {
+            if (err) {
+              return next(err);
+            }
+            return res.send(message);
+          });
         });
       }
     });

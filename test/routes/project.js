@@ -1,4 +1,4 @@
-var should = require('should'); 
+var should = require('should');
 var assert = require('assert');
 var request = require('supertest');  
 var superagent = require('superagent');
@@ -9,6 +9,8 @@ var helper = require('../helper');
 var adminuser = helper.adminuser;
 var stduser = helper.stduser;
 var proj = helper.proj;
+
+//@TODO need to test that a user can not access projects they don't own
 
 describe('Project API', function() {
 

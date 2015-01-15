@@ -37,7 +37,11 @@ module.exports = {
 
   proj: {
           name: "mochaproject",
-          fullname: "mochaproject.getuhost.org",
-          size: "tiny"
-        }
+          fullname: "mochaproject.getuhost.org"
+        },
+
+  awsplatform: {
+                 name: "mochaaws",
+                 provider: "aws"
+               }
 };

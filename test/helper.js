@@ -9,6 +9,8 @@ module.exports = {
   stduser: {
              username: "mochatest",
              password: "testpw",
+             firstname: "Mocha",
+             lastname: "Test",
              verifiedEmail: true,
              email: "mochatest@markcallen.com"
            },

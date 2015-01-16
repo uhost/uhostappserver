@@ -13,25 +13,31 @@ describe("Chef Users", function(){
   it("create user", function(done){    
     chef.chefCreateUser(stduser, function(err, user){      
       if (err) {
-        console.log(err);
+        return done(err);
       }
+      user.id.should.equal(stduser.username);
+
       done();    
     });  
   });
 
   it("get user", function(done){    
     chef.chefGetUser(stduser.username, function(err, user){      
-      console.log(user);
+      if (err) {
+        return done(err);
+      }
+      user.id.should.equal(stduser.username);
       done();    
     });  
   });
 
-  /*
   it("delete user", function(done){    
     chef.chefDeleteUser(stduser, function(err, user){      
+      if (err) {
+        return done(err);
+      }
       done();    
     });  
   });
-*/
 });
 

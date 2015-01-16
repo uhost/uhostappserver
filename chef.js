@@ -12,7 +12,6 @@ var chefoptions = {
 function chefUser(user) {
   var chefuser = {};
   chefuser.id = user.username;
-  chefuser.name = user.username;
   chefuser.ssh_keys = user.pubkey;
   chefuser.comment = user.firstname + " " + user.lastname + " (" + user.email + ")";
 

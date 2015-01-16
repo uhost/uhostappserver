@@ -10,7 +10,7 @@ var nodemailer = require("nodemailer");
 var ses = require('nodemailer-ses-transport');
 var transport = nodemailer.createTransport(ses({
   accessKeyId: aws.awsAccessKey,
-    secretAccessKey: aws.awsSecretKey
+  secretAccessKey: aws.awsSecretKey
 }));
 
 function hash(passwd, salt) {
@@ -114,6 +114,10 @@ module.exports = {
                },
 
   forgottenPasswordEmail: function(user, cb) {
+                            if (! user) {
+                              if (cb) { cb("utils.forgottenPasswordEmail: No user defined", null); }
+                              return;
+                            }
                             var url = server.servername + "/#recover/" + user.username + "/" + hash(user.username, user.recoverSalt);
                             var textData = "Use this URL to recover your account: " + url;
                             var htmlData = "Use this URL to recover your account: <a href=\"" + url + "\">" + url + "</a>";

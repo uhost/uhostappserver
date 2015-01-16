@@ -12,6 +12,7 @@ var chefoptions = {
 function chefUser(user) {
   var chefuser = {};
   chefuser.id = user.username;
+  chefuser.name = user.username;
   chefuser.ssh_keys = user.pubkey;
   chefuser.comment = user.firstname + " " + user.lastname + " (" + user.email + ")";
 
@@ -29,7 +30,7 @@ module.exports = {
                         if (cb) { cb(err, result); }
                       });
                     } else {
-                      if (cb) { cb(null, "no role to create"); }
+                      if (cb) { cb("no role to create", null); }
                     }
                   },
 
@@ -39,7 +40,7 @@ module.exports = {
                         if (cb) { cb(err, result); }
                       });
                     } else {
-                      if (cb) { cb(null, "no role to delete"); }
+                      if (cb) { cb("no role to delete", null); }
                     }
                   },
 
@@ -49,7 +50,7 @@ module.exports = {
                      if (cb) { cb(err, result); }
                    });
                  } else {
-                   if (cb) { cb(null, "no role to get"); }
+                   if (cb) { cb("no role to get", null); }
                  }
                },
 
@@ -59,7 +60,7 @@ module.exports = {
                         if (cb) { cb(err, result); }
                       });
                     } else {
-                      if (cb) { cb(null, "no role to delete"); }
+                      if (cb) { cb("no role to delete", null); }
                     }
                   },
 
@@ -74,7 +75,7 @@ module.exports = {
                         if (cb) { cb(err, result); }
                       });
                     } else {
-                      if (cb) { cb(null, "no user to create"); }
+                      if (cb) { cb("no user to create", null); }
                     }
                   },
 
@@ -84,9 +85,19 @@ module.exports = {
                         if (cb) { cb(err, result); }
                       });
                     } else {
-                      if (cb) { cb(null, "no user to update"); }
+                      if (cb) { cb( "no user to update", null); }
                     }
                   },
+
+  chefGetUser: function(username, cb) {
+                 if (username) {
+                   chef.getDataBagItem('users', username, function(err, result) {
+                     if (cb) { cb(err, result); }
+                   });
+                 } else {
+                   if (cb) { cb("no username to get", null); }
+                 }
+               },
 
   chefDeleteUser: function(user, cb) {
                     if (user) {
@@ -94,7 +105,7 @@ module.exports = {
                         if (cb) { cb(err, result); }
                       });
                     } else {
-                      if (cb) { cb(null, "no user to delete"); }
+                      if (cb) { cb("no user to delete", null); }
                     }
                   },
 

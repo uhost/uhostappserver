@@ -1,0 +1,33 @@
+{
+  "Sessiondb": {
+    "host": "localhost",
+    "name": "express"
+  },
+
+  "Webserver": {
+    "port": "8888"
+  },
+
+  "DB": {
+    "uri": "mongodb://localhost/uhost"
+  },
+
+  "Queueserver": {
+    "port": "3000"
+  },
+
+  "Email": {
+    "senderaddress": "mark@markcallen.com"
+  },
+
+  "Server": {
+    "servername": "http://127.0.0.1:8888"
+  },
+
+  "AWS": {
+    "route53": {
+      "domainname": "getuhost.org"
+    }
+  }
+
+}

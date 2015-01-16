@@ -13,6 +13,7 @@ module.exports = function (grunt) {
         concurrent: {
             dev: ["nodemon:dev", "node-inspector", "shell:chefzero", "watch"],
             test: ["mochaTest:test"],
+            chef: ["mochaTest:chef"],
             options: {
                 logConcurrentOutput: true
             }
@@ -24,6 +25,13 @@ module.exports = function (grunt) {
               clearRequireCache: true
             },
             src: ['test/routes/**/*.js']
+          },
+          chef: {
+            options: {
+              reporter: 'spec',
+              clearRequireCache: true
+            },
+            src: ['test/chef/**/*.js']
           },
           db: { 
             options: {
@@ -173,6 +181,7 @@ module.exports = function (grunt) {
     grunt.registerTask('default', ['concurrent:dev']);
     grunt.registerTask('lint', ['jshint']);
     grunt.registerTask('test', ['shell:knife', 'concurrent:test']);
+    grunt.registerTask('testchef', ['shell:knife', 'concurrent:chef']);
     grunt.registerTask('testdb', ['mochaTest:db']);
     // @TODO need to get blanket coverage to work
     grunt.registerTask('coverage', ['blanket']);

@@ -26,7 +26,7 @@ describe('Project API', function() {
     it('create a new account', function(done) {
       request(helper.url)
       .post('/api/account')
-      .send({username: stduser.username, password: stduser.password, email: stduser.email, firstname: 'Mocha', lastname: 'Test'})
+      .send(stduser)
       .expect(200) //Status code
       .end(function(err, res) {
         if (err) {

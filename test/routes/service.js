@@ -9,9 +9,9 @@ var helper = require('../helper');
 var adminuser = helper.adminuser;
 var stduser = helper.stduser;
 
-//@TODO need to test that a user can not access platforms they do not own
+//@TODO need to test that a user can not access services they do not own
 
-describe('Platform API', function() {
+describe('Service API', function() {
 
   var agent = superagent.agent();
 
@@ -22,7 +22,7 @@ describe('Platform API', function() {
     });
   });
 
-  describe('Platform', function() {
+  describe('Service', function() {
     it('create a new account', function(done) {
       request(helper.url)
       .post('/api/account')
@@ -39,10 +39,10 @@ describe('Platform API', function() {
         done();
       });
     });
-    it('create a new platform', function(done) {
+    it('create a new service', function(done) {
       request(helper.url)
-      .post('/api/platform')
-      .send(helper.awsplatform)
+      .post('/api/service')
+      .send(helper.service)
       .expect(200) //Status code
       .auth(stduser.username, stduser.password)
       .end(function(err, res) {
@@ -51,28 +51,28 @@ describe('Platform API', function() {
         }
         // this is should.js syntax, very clear
         res.body.should.have.property('_id');
-        helper.awsplatform.id = res.body._id;
+        helper.service.id = res.body._id;
 
         done();
       });
     });
-    it('list platforms - httpauth', function(done) {
+    it('list services - httpauth', function(done) {
       request(helper.url)
-      .get('/api/platforms')
+      .get('/api/services')
       .expect(200)
       .auth(stduser.username, stduser.password)
       .end(function(err, res) {
         if (err) {
           throw err;
         }
-        res.body.should.containDeep([{'_id': helper.awsplatform.id}]);
+        res.body.should.containDeep([{'_id': helper.service.id}]);
         res.body.should.containDeep([{'userid': stduser.id}]);
         done();
       });
     });
-    it('authorization required for platforms', function(done) {
+    it('authorization required for services', function(done) {
       request(helper.url)
-      .get('/api/platforms')
+      .get('/api/services')
       .expect(401)
       .end(function(err, res) {
         if (err) {
@@ -82,9 +82,9 @@ describe('Platform API', function() {
         done();
       });
     });
-    it('delete a platform', function(done) {
+    it('delete a service', function(done) {
       request(helper.url)
-      .delete('/api/platform/' + helper.awsplatform.id)
+      .delete('/api/service/' + helper.service.id)
       .expect(200)
       .auth(stduser.username, stduser.password)
       .end(function(err, res) {

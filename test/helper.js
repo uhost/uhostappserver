@@ -45,5 +45,9 @@ module.exports = {
   awsplatform: {
                  name: "mochaaws",
                  provider: "aws"
-               }
+               },
+
+  service: {
+             name: "mochaservice"
+           }
 };

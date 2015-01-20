@@ -5,6 +5,7 @@ module.exports = function(params) {
 
   var app = params.app;
   var Project = params.models.project;
+  var ProjectService = params.models.projectservice;
   var chef = params.chef;
 
   // Project
@@ -253,18 +254,15 @@ module.exports = function(params) {
   });
 
   app.get('/api/project/:id/services', function (req, res, next) {
-    Project.findById(req.params.id, function (err, project) {
+    ProjectService.find({projectid: req.params.id}, function (err, services) {
       if (err) {
         return next(err);
       }
-      return res.send(project.services);
+      return res.send(services);
     });
   });
 
-  app.post('/api/project/:id/service/:service', function (req, res, next) {
-    if (! req.body[req.params.service]) {
-      return next("Can't find " + req.params.service + " in input.");
-    }
+  app.post('/api/project/:id/service', function (req, res, next) {
     Project.findById(req.params.id, function (err, project) {
       if (err) {
         return next(err);
@@ -272,30 +270,56 @@ module.exports = function(params) {
       if (! project) {
         return next("Can't find project for: " + req.params.id);
       }
-      var projectRolename = utils.fullnameToRole(project.fullname);
-      chefGetRole(projectRolename, function(err, projectRole) {
-        if (err) {
-          return next(err);
-        }
-        project = addService(project, projectRole, req.params.service, req.body[req.params.service]);
-        chef.chefUpdateRole(projectRolename, projectRole, function(err, results) {
+      var projectservice = new ProjectService();
+      projectservice.userid = req.user.id;
+      utils.updateModel(req.body, projectservice, function(projectservice) {
+        projectservice.save(function(err) {
           if (err) {
             return next(err);
           }
-          if (! project.instance) {
-            createProjectServer(project, req.user, function(err, project) {
-              if (err) {
-                return next(err);
-              }
-              return res.send(project.services);
-            });
-          } else {
-            //TODO: run chef-client on the project server to add the new service
-            return res.send(project.services);
-          }
+          return res.send(projectservice);
         });
       });
     });
   });
+
+
+  app.put('/api/project/:id/service/:serviceid', function (req, res, next) {
+    ProjectService.findById(req.params.serviceid, function (err, projectservice) {
+      if (err) {
+        return next(err);
+      }
+      if (! projectservice) {
+        return next("Can't find projectservice for: " + req.params.serviceid);
+      }
+      utils.updateModel(req.body, projectservice, function(projectservice) {
+        projectservice.save(function(err) {
+          if(err) {
+            return next(err);
+          } 
+          res.send(projectservice);
+        });
+      });
+    });
+  });
+
+  app.delete('/api/project/:id/service/:serviceid', function (req, res, next) {
+    var user = req.user;
+    ProjectService.findById(req.params.serviceid, function (err, projectservice) {
+      if (err) {
+        return next(err);
+      }  
+      if (! projectservice) {
+        return next("Can't find projectservice for: " + req.params.serviceid);
+      }
+      projectservice.remove(function(err) {
+        if (err) {
+          return next(err);
+        }
+        return res.send("Done");
+      });
+    });
+  });
+
 
 };

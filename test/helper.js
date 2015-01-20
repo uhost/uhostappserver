@@ -37,7 +37,7 @@ module.exports = {
                 });
               },
 
-  proj: {
+  project: {
           name: "mochaproject",
           fullname: "mochaproject.getuhost.org"
         },
@@ -49,5 +49,9 @@ module.exports = {
 
   service: {
              name: "mochaservice"
-           }
+           },
+
+  projectservice: {
+                    name: "mochaprojectservice"
+                  }
 };

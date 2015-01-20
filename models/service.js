@@ -6,7 +6,8 @@ module.exports = function(params) {
   var ObjectId = Schema.ObjectId;
 
   var ServiceSchema = new Schema({
-    name: {type: String, required: true, unique: true},
+    userid: {type: Object, required: true},
+    name: {type: String, required: true},
     created: {type: Date, default: Date.now}
   });
 

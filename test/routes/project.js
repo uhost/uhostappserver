@@ -8,7 +8,6 @@ var helper = require('../helper');
 
 var adminuser = helper.adminuser;
 var stduser = helper.stduser;
-var proj = helper.proj;
 
 //@TODO need to test that a user can not access projects they don't own
 
@@ -43,7 +42,7 @@ describe('Project API', function() {
     it('create a new project', function(done) {
       request(helper.url)
       .post('/api/project')
-      .send({name: proj.name})
+      .send({name: helper.project.name})
       .expect(200) //Status code
       .auth(stduser.username, stduser.password)
       .end(function(err, res) {
@@ -52,7 +51,7 @@ describe('Project API', function() {
         }
         // this is should.js syntax, very clear
         res.body.should.have.property('_id');
-        proj.id = res.body._id;
+        helper.project.id = res.body._id;
 
         done();
       });
@@ -66,7 +65,7 @@ describe('Project API', function() {
         if (err) {
           throw err;
         }
-        res.body.should.containDeep([{'_id': proj.id}]);
+        res.body.should.containDeep([{'_id': helper.project.id}]);
         res.body.should.containDeep([{'userid': stduser.id}]);
         done();
       });
@@ -85,7 +84,7 @@ describe('Project API', function() {
     });
     it('delete a project', function(done) {
       request(helper.url)
-      .delete('/api/project/' + proj.id)
+      .delete('/api/project/' + helper.project.id)
       .expect(200)
       .auth(stduser.username, stduser.password)
       .end(function(err, res) {

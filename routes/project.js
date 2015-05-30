@@ -7,6 +7,7 @@ module.exports = function(params) {
   var Project = params.models.project;
   var ProjectService = params.models.projectservice;
   var chef = params.chef;
+  var jobs = params.jobs;
 
   // Project
 
@@ -142,6 +143,8 @@ module.exports = function(params) {
           return next(err);
         }
       }
+      res.send(project);
+/*
       chef.chefCreateRole(serverRole, function(err, result) {
         if (err) {
           return next(err);
@@ -158,6 +161,7 @@ module.exports = function(params) {
           res.send(project);
         }
       });
+*/
     });
   });
 
@@ -254,15 +258,24 @@ module.exports = function(params) {
   });
 
   app.get('/api/project/:id/services', function (req, res, next) {
-    ProjectService.find({projectid: req.params.id}, function (err, services) {
+    ProjectService.find({projectid: req.params.id}, function (err, projectservices) {
       if (err) {
         return next(err);
       }
-      return res.send(services);
+      return res.send(projectservices);
     });
   });
 
-  app.post('/api/project/:id/service', function (req, res, next) {
+  app.get('/api/project/:id/service/:serviceid', function (req, res, next) {
+    ProjectService.findOne([{projectid: req.params.id, serviceid: req.params.serviceid}], function (err, projectservices) {
+      if (err) {
+        return next(err);
+      }
+      return res.send(projectservices);
+    });
+  });
+
+  app.post('/api/project/:id/service/:serviceid', function (req, res, next) {
     Project.findById(req.params.id, function (err, project) {
       if (err) {
         return next(err);
@@ -272,6 +285,8 @@ module.exports = function(params) {
       }
       var projectservice = new ProjectService();
       projectservice.userid = req.user.id;
+      projectservice.projectid = req.params.id;
+      projectservice.serviceid = req.params.serviceid;
       utils.updateModel(req.body, projectservice, function(projectservice) {
         projectservice.save(function(err) {
           if (err) {
@@ -283,9 +298,8 @@ module.exports = function(params) {
     });
   });
 
-
   app.put('/api/project/:id/service/:serviceid', function (req, res, next) {
-    ProjectService.findById(req.params.serviceid, function (err, projectservice) {
+    ProjectService.findOne([{projectid: req.params.projectid, serviceid: req.params.serviceid}], function (err, projectservice) {
       if (err) {
         return next(err);
       }
@@ -305,7 +319,7 @@ module.exports = function(params) {
 
   app.delete('/api/project/:id/service/:serviceid', function (req, res, next) {
     var user = req.user;
-    ProjectService.findById(req.params.serviceid, function (err, projectservice) {
+    ProjectService.findOne([{projectid: req.params.projectid, serviceid: req.params.serviceid}], function (err, projectservice) {
       if (err) {
         return next(err);
       }  
@@ -318,6 +332,65 @@ module.exports = function(params) {
         }
         return res.send("Done");
       });
+    });
+  });
+
+  app.get('/api/project/:id/service/:serviceid/create', function (req, res, next) {
+    var user = req.user;
+    ProjectService.findOne([{projectid: req.params.projectid, serviceid: req.params.serviceid}], function (err, projectservice) {
+      if (err) {
+        return next(err);
+      }
+      if (! projectservice) {
+        return next("Can't find projectservice for: " + req.params.serviceid);
+      }
+      var job = jobs.create('createservice', { projectservice: projectservice }).save( function(err) {
+        if (err) {
+          return next(err);
+        }
+        res.send(job);
+      });
+
+    });
+  });
+
+  app.get('/api/project/:id/service/:serviceid/status', function (req, res, next) {
+    var user = req.user;
+    ProjectService.findOne([{projectid: req.params.projectid, serviceid: req.params.serviceid}], function (err, projectservice) {
+      if (err) {
+        return next(err);
+      }
+      if (! projectservice) {
+        return next("Can't find projectservice for: " + req.params.serviceid);
+      }
+      var job = jobs.create('servicestatus', { projectservice: projectservice }).save( function(err) {
+        if (err) {
+          return next(err);
+        }
+      });
+      job.on('complete', function(result){
+        res.send(result);
+      });
+
+    });
+  });
+
+  app.get('/api/project/:id/service/:serviceid/destroy', function (req, res, next) {
+    var user = req.user;
+    ProjectService.findOne([{projectid: req.params.projectid, serviceid: req.params.serviceid}], function (err, projectservice) {
+      if (err) {
+        return next(err);
+      }
+      if (! projectservice) {
+        return next("Can't find projectservice for: " + req.params.serviceid);
+      }
+      var job = jobs.create('destroyservice', { projectservice: projectservice }).save( function(err) {
+        if (err) {
+          return next(err);
+        }
+        res.send(job);
+      });
+
     });
   });
 

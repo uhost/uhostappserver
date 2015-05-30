@@ -48,7 +48,8 @@ module.exports = {
                },
 
   service: {
-             name: "mochaservice"
+             name: "mochaservice",
+             role: "helios"
            },
 
   projectservice: {

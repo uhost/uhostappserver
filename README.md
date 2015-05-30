@@ -10,15 +10,40 @@ Install using UHostServer
 Development
 -----------
 
-Install chef-zero
+
+Install databases
+
+sudo apt-get install mongodb
+sudo apt-get install redis-server
+
+Install chefDK
+
 gem install bundler
 bundle
 
 Install grunt
 npm install -g grunt-cli
 
+Install packages
+npm install
+
 Run
 grunt
+
+
+Test
+----
+
+Run
+grunt test
+
+Individual tests
+node_modules/mocha/bin/mocha test/routes/projectservice.js
+
+clean the database
+
+grunt cleandb
+
 
 License & Authors
 -----------------

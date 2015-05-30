@@ -92,7 +92,7 @@ describe('ProjectService API', function() {
     });
     it('create a new projectservice', function(done) {
       request(helper.url)
-      .post('/api/project/' + helper.projectservice.projectid + '/service')
+      .post('/api/project/' + helper.projectservice.projectid + '/service/' + helper.projectservice.serviceid)
       .send(helper.projectservice)
       .expect(200) //Status code
       .auth(stduser.username, stduser.password)
@@ -123,6 +123,22 @@ describe('ProjectService API', function() {
         done();
       });
     });
+    it('list projectservice - httpauth', function(done) {
+      request(helper.url)
+      .get('/api/project/' + helper.projectservice.projectid + '/service/' + helper.projectservice.serviceid)
+      .expect(200)
+      .auth(stduser.username, stduser.password)
+      .end(function(err, res) {
+        if (err) {
+          throw err;
+        }
+        res.body.should.containDeep({'serviceid': helper.projectservice.serviceid});
+        res.body.should.containDeep({'projectid': helper.projectservice.projectid});
+        res.body.should.containDeep({'platformid': helper.projectservice.platformid});
+        res.body.should.containDeep({'userid': stduser.id});
+        done();
+      });
+    });
     it('authorization required for projectservices', function(done) {
       request(helper.url)
       .get('/api/project/' + helper.projectservice.projectid + '/services')
@@ -132,6 +148,34 @@ describe('ProjectService API', function() {
           throw err;
         }
         res.body.should.have.keys('err');
+        done();
+      });
+    });
+/*
+    it('create projectservice', function(done) {
+      request(helper.url)
+      .get('/api/project/' + helper.projectservice.projectid + '/service/' + helper.projectservice.serviceid + '/create')
+      .expect(200)
+      .auth(stduser.username, stduser.password)
+      .end(function(err, res) {
+        if (err) {
+          throw err;
+        }
+        console.log(res.body);
+        done();
+      });
+    });
+*/
+    it('delete a projectservice', function(done) {
+      request(helper.url)
+      .delete('/api/project/' + helper.projectservice.projectid + '/service/' + helper.projectservice.serviceid)
+      .expect(200)
+      .auth(stduser.username, stduser.password)
+      .end(function(err, res) {
+        if (err) {
+          throw err;
+        }
+        //@TODO: look for something
         done();
       });
     });

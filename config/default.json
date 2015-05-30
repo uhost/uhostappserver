@@ -6,6 +6,41 @@
 
   "Webserver": {
     "port": "8888"
+  },
+
+  "DB": {
+    "uri": "mongodb://localhost/uhost"
+  },
+
+  "Queueserver": {
+    "port": "3000"
+  },
+
+  "Email": {
+    "senderaddress": "mark@markcallen.com"
+  },
+
+  "Server": {
+    "servername": "http://127.0.0.1:8888"
+  },
+
+  "DNS": {
+    "domainname": "getuhost.org"
+  },
+
+  "AWS": {
+    "region": "us-west-2",
+    "route53": {
+      "domainname": "getuhost.org"
+    },
+    "ec2": {
+      "ImageId": "ami-67526757"
+    }
+  },
+
+  "Chef": {
+    "chef_server_url": "https://127.0.0.1:8889",
+    "validationpem": "/chef/.chef/uhost.pem"
   }
 
 }

@@ -1,1 +1,6 @@
 node_modules/
+Gemfile.lock
+.rebooted
+npm-debug.log
+*.swp
+config/local.json

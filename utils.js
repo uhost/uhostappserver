@@ -2,15 +2,15 @@ var crypto = require('crypto');
 var uuid = require('node-uuid');
 var email = require('config').Email;
 var server = require('config').Server;
-var aws = require('config').AWS;
+var awsconfig = require('config').AWS;
 
 // Setup SMTP
 //@TODO: need to change this to something that doesn't require AWS keys for testing
 var nodemailer = require("nodemailer");
 var ses = require('nodemailer-ses-transport');
 var transport = nodemailer.createTransport(ses({
-  accessKeyId: aws.awsAccessKey,
-  secretAccessKey: aws.awsSecretKey
+  accessKeyId: awsconfig.awsAccessKey,
+  secretAccessKey: awsconfig.awsSecretKey
 }));
 
 function hash(passwd, salt) {

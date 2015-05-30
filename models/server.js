@@ -1,3 +1,4 @@
+// Lives inside projectserver
 
 module.exports = function(params) {
 
@@ -6,13 +7,9 @@ module.exports = function(params) {
   var ObjectId = Schema.ObjectId;
 
   var ServerSchema = new Schema({
-    name: {type: String, required: true, unique: true},
+    name: {type: String, required: true},
     fullname: {type: String, required: true},
-    projectid: {type: ObjectId, required: true},
-    platformid: {type: ObjectId, required: true},
-    serviceid: {type: ObjectId, required: true},
     instance: {type: String},
-    instance_type: {type: String},
     created: {type: Date, default: Date.now}
   });
 

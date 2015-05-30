@@ -46,12 +46,6 @@ module.exports = function(params) {
       if (! service) {
         return next("Can't find service for: " + req.params.id);
       }
-      if (req.body.fullname) {
-        service.fullname = req.body.fullname;
-      }
-      if (! utils.checkDnsName(service.fullname)) {
-        return next(service.fullname + " is not a valid dns name");
-      }
       service.save(function(err) {
         if(err) {
           return next(err);

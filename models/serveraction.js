@@ -7,7 +7,6 @@ module.exports = function(params) {
 
   var ServerActionSchema = new Schema({
     serverid: {type: ObjectId, required: true},
-    instance: {type: String},
     userid: {type: ObjectId},
     action: {type: String, required: true},
     created: {type: Date, default: Date.now}

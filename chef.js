@@ -1,11 +1,12 @@
 var ChefApi = require("chef-api");
 var chef = new ChefApi();
 var path = require('path');
+var chefconfig = require('config').Chef;
 
 var chefoptions = {
   user_name: "uhostadmin",
   key_path: path.resolve(__dirname, 'chef/.chef/uhost.pem'),
-  url: "http://127.0.0.1:8889",
+  url: chefconfig.chef_server_url,
   ca: null
 };
 
@@ -62,6 +63,23 @@ module.exports = {
                       if (cb) { cb("no role to delete", null); }
                     }
                   },
+
+  chefDeleteNode: function(nodename, cb) {
+                    if (nodename) {
+                      chef.deleteNode(nodename, function(err, result) {
+                        if (err) { 
+                          if (cb) { return cb(err, result); }
+                        } else {
+                          chef.deleteClient(nodename, function(err, result) {
+                            if (cb) { return cb(err, result); }
+                          });
+                        }
+                      });
+                    } else {
+                      if (cb) { cb("no node to delete", null); }
+                    }
+                  },
+
 
 
   chefUser: function(user) {

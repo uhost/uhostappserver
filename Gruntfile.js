@@ -13,9 +13,11 @@ module.exports = function (grunt) {
         concurrent: {
             dev: ["nodemon:dev", "node-inspector", "shell:chefzero", "watch"],
             test: ["mochaTest:test"],
+            testaws: ["mochaTest:testaws"],
             chef: ["mochaTest:chef"],
             options: {
-                logConcurrentOutput: true
+                logConcurrentOutput: true,
+                limit: 5
             }
         },
         mochaTest: {
@@ -25,6 +27,13 @@ module.exports = function (grunt) {
               clearRequireCache: true
             },
             src: ['test/routes/**/*.js']
+          },
+          testaws: {
+            options: {
+              reporter: 'spec',
+              clearRequireCache: true
+            },
+            src: ['test/routes/projectservice.js']
           },
           chef: {
             options: {
@@ -54,10 +63,13 @@ module.exports = function (grunt) {
         },
         shell: {
           chefzero: {
-              command: 'chef-zero'
+              command: 'chef-zero --host 0.0.0.0 --port 8889 --ssl'
           },
           knife: {
               command: ['cd chef', 'knife upload .'].join('&&')
+          },
+          dbclean: {
+              command: 'mongo uhost cleanmongo.js'
           }
         },
         blanket: {
@@ -123,7 +135,7 @@ module.exports = function (grunt) {
                       "NODE_ENV": "development"
                 },
                 nodeArgs: ['--debug'],
-                ignore: ["public/**", "test/**"],
+                ignore: ["public/**", "test/**", "*.sh"],
                 delay: 300,
 
                 callback: function (nodemon) {
@@ -181,8 +193,10 @@ module.exports = function (grunt) {
     grunt.registerTask('default', ['concurrent:dev']);
     grunt.registerTask('lint', ['jshint']);
     grunt.registerTask('test', ['shell:knife', 'concurrent:test']);
+    grunt.registerTask('testaws', ['shell:knife', 'concurrent:testaws']);
     grunt.registerTask('testchef', ['shell:knife', 'concurrent:chef']);
     grunt.registerTask('testdb', ['mochaTest:db']);
+    grunt.registerTask('cleandb', ['shell:dbclean']);
     // @TODO need to get blanket coverage to work
     grunt.registerTask('coverage', ['blanket']);
 };

@@ -1,7 +1,6 @@
 {
   "Sessiondb": {
-    "host": "localhost",
-    "name": "express"
+    "url": "mongodb://localhost/express"
   },
 
   "Webserver": {

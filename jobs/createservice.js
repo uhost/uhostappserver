@@ -20,7 +20,7 @@ module.exports = function(params) {
     KeyName: awsconfig.ec2.KeyName
   };
 
-  var validationpem = fs.readFileSync(__dirname + "/.." + chefconfig.validationpem).toString().split('\n');
+  var validationpem = fs.readFileSync(__dirname + "/../" + chefconfig.validationpem).toString().split('\n');
 
   jobs.process('createservice', function(job, done){
     console.log(job.data.projectservice);

@@ -39,7 +39,7 @@
 
   "Chef": {
     "chef_server_url": "https://127.0.0.1:8889",
-    "validationpem": "/chef/.chef/uhost.pem"
+    "validationpem": "chef/.chef/uhost.pem"
   }
 
 }

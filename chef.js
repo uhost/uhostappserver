@@ -5,7 +5,7 @@ var chefconfig = require('config').Chef;
 
 var chefoptions = {
   user_name: "uhostadmin",
-  key_path: path.resolve(__dirname, 'chef/.chef/uhost.pem'),
+  key_path: path.resolve(__dirname, chefconfig.validationpem),
   url: chefconfig.chef_server_url,
   ca: null
 };

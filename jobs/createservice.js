@@ -51,7 +51,7 @@ module.exports = function(params) {
     userdata.push('log_level        :info');
     userdata.push('log_location     STDOUT');
     userdata.push('chef_server_url  "' + chefconfig.chef_server_url + '"');
-    userdata.push('validation_client_name "chef-validator"');
+    userdata.push('validation_client_name "' + chefconfig.validation_client_name + '"');
     userdata.push('node_name "' + nodename + '"');
     userdata.push('ssl_verify_mode :verify_none');
     userdata.push('EOF');

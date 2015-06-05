@@ -46,11 +46,13 @@ module.exports = function(params) {
       if (! service) {
         return next("Can't find service for: " + req.params.id);
       }
-      service.save(function(err) {
-        if(err) {
-          return next(err);
-        } 
-        res.send(service);
+      utils.updateModel(req.body, service, function(service) {
+        service.save(function(err) {
+          if(err) {
+            return next(err);
+          } 
+          res.send(service);
+        });
       });
     });
   });

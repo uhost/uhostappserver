@@ -82,6 +82,23 @@ describe('Service API', function() {
         done();
       });
     });
+    it('update a service', function(done) {
+      request(helper.url)
+      .put('/api/service/' + helper.service.id)
+      .send({"role": helper.service.role + "01"})
+      .expect(200) //Status code
+      .auth(stduser.username, stduser.password)
+      .end(function(err, res) {
+        if (err) {
+          throw err;
+        }
+        // this is should.js syntax, very clear
+        res.body.should.containDeep({'_id': helper.service.id});
+        res.body.should.containDeep({'role': helper.service.role + "01"});
+
+        done();
+      });
+    }); 
     it('delete a service', function(done) {
       request(helper.url)
       .delete('/api/service/' + helper.service.id)

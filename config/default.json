@@ -1,7 +1,6 @@
 {
   "Sessiondb": {
-    "host": "localhost",
-    "name": "express"
+    "url": "mongodb://localhost/express"
   },
 
   "Webserver": {
@@ -40,7 +39,8 @@
 
   "Chef": {
     "chef_server_url": "https://127.0.0.1:8889",
-    "validationpem": "/chef/.chef/uhost.pem"
+    "validation_client_name": "chef-validator",
+    "validationpem": "chef/.chef/uhost.pem"
   }
 
 }

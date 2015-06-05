@@ -25,7 +25,7 @@ app.use(session({
   secret:'mysecretcookie',
   maxAge: new Date(Date.now() + 3600000),
   store: new MongoStore(
-    {db: sessiondb.name, host: sessiondb.host},
+    {url: sessiondb.url},
     function(collection){
       if (collection.db && collection.db.databaseName) {
         console.log('connect-mongodb setup ok. Connected to: ' + collection.db.databaseName);

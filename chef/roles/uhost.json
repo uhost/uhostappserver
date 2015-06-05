@@ -1,0 +1,22 @@
+{
+  "name": "uhost",
+  "description": "",
+  "env_run_lists": {
+  },
+  "chef_type": "role",
+  "run_list": [
+    "recipe[uhost::default]"
+  ],
+  "default_attributes": {
+    "aws": {
+      "awsAccessKey": "",                           
+      "awsSecretKey": "",
+      "route53": {
+        "hostedzoneid": ""
+      }
+    }
+  },
+  "override_attributes": {
+  },
+  "json_class": "Chef::Role"
+}

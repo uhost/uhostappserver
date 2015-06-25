@@ -267,7 +267,7 @@ module.exports = function(params) {
   });
 
   app.get('/api/project/:id/service/:serviceid', function (req, res, next) {
-    ProjectService.findOne([{projectid: req.params.id, serviceid: req.params.serviceid}], function (err, projectservices) {
+    ProjectService.findOne({$or: [{projectid: req.params.projectid}, {serviceid: req.params.serviceid}]}, function (err, projectservices) {
       if (err) {
         return next(err);
       }
@@ -299,7 +299,7 @@ module.exports = function(params) {
   });
 
   app.put('/api/project/:id/service/:serviceid', function (req, res, next) {
-    ProjectService.findOne([{projectid: req.params.projectid, serviceid: req.params.serviceid}], function (err, projectservice) {
+    ProjectService.findOne({$or: [{projectid: req.params.projectid}, {serviceid: req.params.serviceid}]}, function (err, projectservice) {
       if (err) {
         return next(err);
       }
@@ -319,7 +319,7 @@ module.exports = function(params) {
 
   app.delete('/api/project/:id/service/:serviceid', function (req, res, next) {
     var user = req.user;
-    ProjectService.findOne([{projectid: req.params.projectid, serviceid: req.params.serviceid}], function (err, projectservice) {
+    ProjectService.findOne({$or: [{projectid: req.params.projectid}, {serviceid: req.params.serviceid}]}, function (err, projectservice) {
       if (err) {
         return next(err);
       }  
@@ -337,7 +337,7 @@ module.exports = function(params) {
 
   app.get('/api/project/:id/service/:serviceid/create', function (req, res, next) {
     var user = req.user;
-    ProjectService.findOne([{projectid: req.params.projectid, serviceid: req.params.serviceid}], function (err, projectservice) {
+    ProjectService.findOne({$or: [{projectid: req.params.projectid}, {serviceid: req.params.serviceid}]}, function (err, projectservice) {
       if (err) {
         return next(err);
       }
@@ -356,7 +356,7 @@ module.exports = function(params) {
 
   app.get('/api/project/:id/service/:serviceid/status', function (req, res, next) {
     var user = req.user;
-    ProjectService.findOne([{projectid: req.params.projectid, serviceid: req.params.serviceid}], function (err, projectservice) {
+    ProjectService.findOne({$or: [{projectid: req.params.projectid}, {serviceid: req.params.serviceid}]}, function (err, projectservice) {
       if (err) {
         return next(err);
       }
@@ -380,7 +380,7 @@ module.exports = function(params) {
 
   app.get('/api/project/:id/service/:serviceid/destroy', function (req, res, next) {
     var user = req.user;
-    ProjectService.findOne([{projectid: req.params.projectid, serviceid: req.params.serviceid}], function (err, projectservice) {
+    ProjectService.findOne({$or: [{projectid: req.params.projectid}, {serviceid: req.params.serviceid}]}, function (err, projectservice) {
       if (err) {
         return next(err);
       }

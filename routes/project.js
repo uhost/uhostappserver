@@ -369,7 +369,10 @@ module.exports = function(params) {
         }
       });
       job.on('complete', function(result){
-        res.send(result);
+        return res.send(result);
+      });
+      job.on('failed', function(result){
+        return next(result);
       });
 
     });

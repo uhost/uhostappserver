@@ -60,19 +60,9 @@ module.exports = {
              overrideattributes: [{helios: {
                                     env: {
                                       "URL_HOST": "http://helios01.getuhost.org/",
-                                      "GOOGLE_CLIENT_SECRET": "8N7c2ZiyaFe7q0zHallJ_mw9",
-                                      "GOOGLE_CLIENT_ID": "546325233748-9lcb25v3droeh0qiklvg32b7o7i7ktgd.apps.googleusercontent.com",
-                                      "AWS_ACCESS_KEY_ID": "AKIAJ4CHXWVH6R3OVAIQ",
-                                      "AWS_SECRET_ACCESS_KEY": "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",
                                       "EMAIL_USE_AWS": 1,
                                       "DEFAULT_FROM_EMAIL": "mark@markcallen.com",
                                       "DEFAULT_FROM_NAME": "'Mark Allen'",
-                                      "NODEJS_CLIENT_ID": "5af82678e7a321b0",
-                                      "NODEJS_CLIENT_SECRET": "NPWPekmKabSv",
-                                      "NODEJS_APP_NAME": "helios01",
-                                      "NODEJS_AUTHORIZE_URL": "http://vord01.getuhost.org/dialog/authorize",
-                                      "NODEJS_TOKEN_URL": "http://vord01.getuhost.org/oauth/token",
-                                      "NODEJS_BASE_URL": "http://vord01.getuhost.org"
                                     }
                                   }}]
            },

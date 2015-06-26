@@ -10,8 +10,8 @@ module.exports = function(params) {
     name: {type: String, required: true},
     role: {type: String},
     runlist: {type: Array , "default" : []},
-    defaultattributes: {type: Schema.Types.Mixed},
-    overrideattributes: {type: Schema.Types.Mixed},
+    defaultattributes: {type: Schema.Types.Mixed, "default" : []},
+    overrideattributes: {type: Schema.Types.Mixed, "default" : []},
     created: {type: Date, default: Date.now}
   });
 

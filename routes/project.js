@@ -144,24 +144,6 @@ module.exports = function(params) {
         }
       }
       res.send(project);
-/*
-      chef.chefCreateRole(serverRole, function(err, result) {
-        if (err) {
-          return next(err);
-        }
-
-        if (req.body.services) {
-          createProjectServer(project, user, function(err, project) {
-            if (err) {
-              return next(err);
-            }
-            res.send(project);
-          });
-        } else {
-          res.send(project);
-        }
-      });
-*/
     });
   });
 
@@ -218,41 +200,11 @@ module.exports = function(params) {
           }
         });
       } 
-      chef.chefDeleteRole(utils.fullnameToRole(project.fullname), function(err, result) {
+      project.remove(function(err, result) {
         if (err) {
-          console.log(err);
+          return next(err);
         }
-        //TODO: need to deal with route53/dns differently
-        /*
-        deleteRoute53(project.name, function(err) {
-          if (err) {
-            fmt.dump(err, project.name);
-          }
-          deleteRoute53("wordpress."+project.name, function(err) {
-            if (err) {
-              fmt.dump(err, "wordpress."+project.name);
-            }
-            deleteRoute53("chef."+project.name, function(err) {
-              if (err) {
-                fmt.dump(err, "chef."+project.name);
-              }
-              deleteRoute53("jira."+project.name, function(err) {
-                if (err) {
-                  fmt.dump(err, "jira."+project.name);
-                }
-        */
-                project.remove(function(err, result) {
-                  if (err) {
-                    return next(err);
-                  }
-                  return res.send("Done");
-                });
-                /*
-              });
-            });
-          });
-        });
-        */
+        return res.send("Done");
       });
     });
   });
@@ -337,7 +289,7 @@ module.exports = function(params) {
 
   app.get('/api/project/:id/service/:serviceid/create', function (req, res, next) {
     var user = req.user;
-    ProjectService.findOne({$or: [{projectid: req.params.projectid}, {serviceid: req.params.serviceid}]}, function (err, projectservice) {
+    ProjectService.findOne({$or: [{projectid: req.params.projectid}, {serviceid: req.params.serviceid}]}).populate(['projectid', 'serviceid', 'platformid']).exec(function (err, projectservice) {
       if (err) {
         return next(err);
       }

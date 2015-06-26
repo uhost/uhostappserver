@@ -90,7 +90,7 @@ describe('Service API', function() {
     it('update a service', function(done) {
       request(helper.url)
       .put('/api/service/' + helper.service.id)
-      .send({"role": helper.service.role + "01"})
+      .send({"name": helper.service.name + "01"})
       .expect(200) //Status code
       .auth(stduser.username, stduser.password)
       .end(function(err, res) {
@@ -99,7 +99,7 @@ describe('Service API', function() {
         }
         // this is should.js syntax, very clear
         res.body.should.containDeep({'_id': helper.service.id});
-        res.body.should.containDeep({'role': helper.service.role + "01"});
+        res.body.should.containDeep({'name': helper.service.name + "01"});
 
         done();
       });

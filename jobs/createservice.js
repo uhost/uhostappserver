@@ -13,7 +13,7 @@ module.exports = function(params) {
   var validationpem = fs.readFileSync(__dirname + "/../" + chefconfig.validationpem).toString().split('\n');
 
   jobs.process('createservice', function(job, done){
-    console.log(job.data.projectservice);
+    //console.log(job.data.projectservice);
     /*
     ec2.describeVpcs({}, function(err, data) {
      if (err) console.log(err, err.stack); // an error occurred
@@ -32,6 +32,8 @@ module.exports = function(params) {
       SubnetId: awsconfig.ec2.SubnetId,
       KeyName: awsconfig.ec2.KeyName
     };
+
+    var runlist = ['"role[uhost]"', '"role[' + job.data.projectservice.serviceid.role + ']"'];
 
     var userdata = [];
     userdata.push('#!/bin/bash');
@@ -59,7 +61,7 @@ module.exports = function(params) {
     userdata.push('cat << EOF | sudo tee /etc/chef/first-boot.json > /dev/null');
     userdata.push('{');
     userdata.push('  "servername": "' + nodename + "." + dnsconfig.domainname + '",');
-    userdata.push('  "run_list": ["role[uhost]"]');
+    userdata.push('  "run_list": [' + runlist + ']');
     userdata.push('}');
     userdata.push('EOF');
     userdata.push('');

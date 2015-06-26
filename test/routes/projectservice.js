@@ -151,6 +151,7 @@ describe('ProjectService API', function() {
         done();
       });
     });
+/*
     it('create projectservice', function(done) {
       request(helper.url)
       .get('/api/project/' + helper.projectservice.projectid + '/service/' + helper.projectservice.serviceid + "/create")
@@ -164,6 +165,7 @@ describe('ProjectService API', function() {
         done();
       });
     });
+*/
     it('delete a projectservice', function(done) {
       request(helper.url)
       .delete('/api/project/' + helper.projectservice.projectid + '/service/' + helper.projectservice.serviceid)

@@ -11,7 +11,7 @@ module.exports = function(params) {
   jobs.process('rolecreate', function(job, done){
     var service = job.data.service;
 
-    var role = chef.chefRole(service.role, service.name, service.runlist, service.defaultattributes, service.overrideattributes);
+    var role = chef.chefRole(service.role, service.name, service.runlist, service.defaultattributes[0], service.overrideattributes[0]);
 
     chef.chefCreateRole(role, function(err, result) {
       done(err, result);
@@ -27,8 +27,8 @@ module.exports = function(params) {
       }
       role.description = service.name;
       role.run_list = service.runlist;
-      role.default_attributes = service.defaultattributes;
-      role.override_attributes = service.overrideattributes;
+      role.default_attributes = service.defaultattributes[0];
+      role.override_attributes = service.overrideattributes[0];
 
       chef.chefUpdateRole(service.role, role, function(err, result) {
         done(err, result);

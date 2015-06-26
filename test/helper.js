@@ -49,7 +49,7 @@ module.exports = {
 
   service: {
              name: "mochaservice",
-             role: "helios",
+             role: "mocharole",
              runlist: ["recipe[python::default]", "recipe[postgresql::server]", "recipe[helios::default]", "recipe[helios::upstart]", "recipe[helios::nginx]"],
              defaultattributes: [{helios: {
                                    hostname: "helios01.getuhost.org",

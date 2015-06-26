@@ -126,21 +126,19 @@ module.exports = {
                     }
                   },
 
-  chefRole: function(name) {
+  chefRole: function(name, description, runlist, defaultattributes, overrideattributes, envrunlists) {
+              var run_list = runlist || [];
+              var default_attributes = defaultattributes || {};
+              var override_attributes = overrideattributes || {};
+              var env_run_lists = envrunlists || {};
               var role = {
                 "name": name,
-                "description": "",
-                "env_run_lists": {
-                },
+                "description": description,
+                "run_list": run_list,
+                "default_attributes": default_attributes,
+                "override_attributes": override_attributes,
+                "env_run_lists": env_run_lists,
                 "chef_type": "role",
-                "run_list": [
-                  ],
-                "default_attributes": {
-                },
-                "override_attributes": {
-                  "pbp": { 
-                  }
-                },
                 "json_class": "Chef::Role"
               };
 

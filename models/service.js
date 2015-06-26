@@ -9,6 +9,9 @@ module.exports = function(params) {
     userid: {type: Object, required: true},
     name: {type: String, required: true},
     role: {type: String},
+    runlist: {type: Array , "default" : []},
+    defaultattributes: {type: Array , "default" : []},
+    overrideattributes: {type: Array , "default" : []},
     created: {type: Date, default: Date.now}
   });
 

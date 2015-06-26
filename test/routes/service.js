@@ -51,6 +51,11 @@ describe('Service API', function() {
         }
         // this is should.js syntax, very clear
         res.body.should.have.property('_id');
+        res.body.should.have.property('name');
+        res.body.runlist.should.be.instanceof(Array).and.have.lengthOf(5);
+        res.body.defaultattributes.should.be.instanceof(Array).and.have.lengthOf(1);
+        res.body.overrideattributes.should.be.instanceof(Array).and.have.lengthOf(1);
+
         helper.service.id = res.body._id;
 
         done();

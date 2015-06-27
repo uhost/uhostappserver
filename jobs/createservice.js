@@ -25,7 +25,7 @@ module.exports = function(params) {
 
     var ec2params = {
       ImageId: awsconfig.ec2.ImageId,
-      InstanceType: 't1.micro',
+      InstanceType: awsconfig.ec2.InstanceType,
       MinCount: 1, 
       MaxCount: 1,
       SecurityGroupIds: awsconfig.ec2.SecurityGroupIds,

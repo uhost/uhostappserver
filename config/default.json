@@ -33,7 +33,8 @@
       "domainname": "getuhost.org"
     },
     "ec2": {
-      "ImageId": "ami-67526757"
+      "ImageId": "ami-a9e2da99",
+      "InstanceType": "t2.micro"
     }
   },
 

@@ -10,20 +10,10 @@ module.exports = function(params) {
   var ec2 = new AWS.EC2(); 
   var ProjectService = params.models.projectservice;
 
-  var params = {
-    ImageId: awsconfig.ec2.ImageId,
-    InstanceType: 't1.micro',
-    MinCount: 1, 
-    MaxCount: 1,
-    SecurityGroupIds: awsconfig.ec2.SecurityGroupIds,
-    SubnetId: awsconfig.ec2.SubnetId,
-    KeyName: awsconfig.ec2.KeyName
-  };
-
   var validationpem = fs.readFileSync(__dirname + "/../" + chefconfig.validationpem).toString().split('\n');
 
   jobs.process('createservice', function(job, done){
-    console.log(job.data.projectservice);
+    //console.log(job.data.projectservice);
     /*
     ec2.describeVpcs({}, function(err, data) {
      if (err) console.log(err, err.stack); // an error occurred
@@ -32,6 +22,18 @@ module.exports = function(params) {
     */
 
     var nodename = job.data.projectservice.name + "-" + job.data.projectservice.serverids.length+1;
+
+    var ec2params = {
+      ImageId: awsconfig.ec2.ImageId,
+      InstanceType: awsconfig.ec2.InstanceType,
+      MinCount: 1, 
+      MaxCount: 1,
+      SecurityGroupIds: awsconfig.ec2.SecurityGroupIds,
+      SubnetId: awsconfig.ec2.SubnetId,
+      KeyName: awsconfig.ec2.KeyName
+    };
+
+    var runlist = ['"role[uhost]"', '"role[' + job.data.projectservice.serviceid.role + ']"'];
 
     var userdata = [];
     userdata.push('#!/bin/bash');
@@ -59,7 +61,7 @@ module.exports = function(params) {
     userdata.push('cat << EOF | sudo tee /etc/chef/first-boot.json > /dev/null');
     userdata.push('{');
     userdata.push('  "servername": "' + nodename + "." + dnsconfig.domainname + '",');
-    userdata.push('  "run_list": ["role[uhost]"]');
+    userdata.push('  "run_list": [' + runlist + ']');
     userdata.push('}');
     userdata.push('EOF');
     userdata.push('');
@@ -70,10 +72,10 @@ module.exports = function(params) {
 
     //console.log(userdata.join('\n')); 
 
-    params.UserData = new Buffer(userdata.join('\n')).toString('base64');
+    ec2params.UserData = new Buffer(userdata.join('\n')).toString('base64');
 
-    //console.log(params)
-    ec2.runInstances(params, function(err, data) {
+    //console.log(ec2params)
+    ec2.runInstances(ec2params, function(err, data) {
       if (err) { 
         console.log("Could not create instance", err);
         done();
@@ -83,10 +85,10 @@ module.exports = function(params) {
         //console.log(data.Instances[0]);
   
         // Add tags to the instance
-        params = {Resources: [instanceId], Tags: [
+        ec2params = {Resources: [instanceId], Tags: [
           {Key: 'Name', Value: job.data.projectservice.name}
         ]};
-        ec2.createTags(params, function(err) {
+        ec2.createTags(ec2params, function(err) {
         console.log("Tagging instance", err ? "failure" : "success");
   
           var createserveractionjob = jobs.create('createserveraction', { projectservice: job.data.projectservice, instance: instanceId, nodename: nodename }).save( function(err) {

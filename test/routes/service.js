@@ -51,6 +51,11 @@ describe('Service API', function() {
         }
         // this is should.js syntax, very clear
         res.body.should.have.property('_id');
+        res.body.should.have.property('name');
+        res.body.runlist.should.be.instanceof(Array).and.have.lengthOf(5);
+        res.body.defaultattributes.should.be.instanceof(Array).and.have.lengthOf(1);
+        res.body.overrideattributes.should.be.instanceof(Array).and.have.lengthOf(1);
+
         helper.service.id = res.body._id;
 
         done();
@@ -85,7 +90,7 @@ describe('Service API', function() {
     it('update a service', function(done) {
       request(helper.url)
       .put('/api/service/' + helper.service.id)
-      .send({"role": helper.service.role + "01"})
+      .send({"name": helper.service.name + "01"})
       .expect(200) //Status code
       .auth(stduser.username, stduser.password)
       .end(function(err, res) {
@@ -94,7 +99,7 @@ describe('Service API', function() {
         }
         // this is should.js syntax, very clear
         res.body.should.containDeep({'_id': helper.service.id});
-        res.body.should.containDeep({'role': helper.service.role + "01"});
+        res.body.should.containDeep({'name': helper.service.name + "01"});
 
         done();
       });

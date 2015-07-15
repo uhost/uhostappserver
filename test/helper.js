@@ -49,7 +49,22 @@ module.exports = {
 
   service: {
              name: "mochaservice",
-             role: "helios"
+             role: "mocharole",
+             runlist: ["recipe[python::default]", "recipe[postgresql::server]", "recipe[helios::default]", "recipe[helios::upstart]", "recipe[helios::nginx]"],
+             defaultattributes: [{helios: {
+                                   hostname: "helios01.getuhost.org",
+                                   google: [ 
+                                     { user_id: "mark@markcallen.com", info_name: "Mark C Allen" }, {user_id: "csinger@interspect.com", info_name: "Andrew Csinger"} 
+                                   ]}
+                                 }],
+             overrideattributes: [{helios: {
+                                    env: {
+                                      "URL_HOST": "http://helios01.getuhost.org/",
+                                      "EMAIL_USE_AWS": 1,
+                                      "DEFAULT_FROM_EMAIL": "mark@markcallen.com",
+                                      "DEFAULT_FROM_NAME": "'Mark Allen'",
+                                    }
+                                  }}]
            },
 
   projectservice: {

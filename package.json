@@ -2,7 +2,7 @@
   "author": "Mark C Allen <mark@markcallen.com>",
   "name": "uhostappserver",
   "description": "UHost App Server",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "homepage": "http://getuhost.com/",
   "main": "app",
   "engines": {

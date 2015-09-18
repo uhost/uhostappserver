@@ -1,5 +1,6 @@
 var fmt = require('fmt');
 var awsconfig = require('config').AWS;
+var chefconfig = require('config').Chef;
 var AWS = require('aws-sdk');
 
 AWS.config.region = awsconfig.region;

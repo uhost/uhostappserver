@@ -25,43 +25,59 @@ module.exports = {
 
 
   chefCreateRole: function(role, cb) {
-                    if (role) {
-                      chef.createRole(role, function(err, result) {
-                        if (cb) { cb(err, result); }
-                      });
-                    } else {
-                      if (cb) { cb("no role to create", null); }
-                    }
+	            if (chefconfig.enable) {
+                      if (role) {
+                        chef.createRole(role, function(err, result) {
+                          if (cb) { cb(err, result); }
+                        });
+                      } else {
+                        if (cb) { cb("no role to create", null); }
+                      }
+  		    } else {
+		      cb(null, null);
+		    }
                   },
 
   chefDeleteRole: function(rolename, cb) {
-                    if (rolename) {
-                      chef.deleteRole(rolename, function(err, result) {
-                        if (cb) { cb(err, result); }
-                      });
-                    } else {
-                      if (cb) { cb("no role to delete", null); }
-                    }
+	            if (chefconfig.enable) {
+                      if (rolename) {
+                        chef.deleteRole(rolename, function(err, result) {
+                          if (cb) { cb(err, result); }
+                        });
+                      } else {
+                        if (cb) { cb("no role to delete", null); }
+		      }
+       		    } else {
+		      cb(null, null);
+		    }
                   },
 
   chefGetRole: function(rolename, cb) {
-                 if (rolename) {
-                   chef.getRole(rolename, function(err, result) {
-                     if (cb) { cb(err, result); }
-                   });
-                 } else {
-                   if (cb) { cb("no role to get", null); }
-                 }
+	         if (chefconfig.enable) {
+                   if (rolename) {
+                     chef.getRole(rolename, function(err, result) {
+                       if (cb) { cb(err, result); }
+                     });
+                   } else {
+                     if (cb) { cb("no role to get", null); }
+                   }
+		 } else {
+	           cb(null, {});
+		 }
                },
 
   chefUpdateRole: function(rolename, role, cb) {
-                    if (role) {
-                      chef.editRole(rolename, role, function(err, result) {
-                        if (cb) { cb(err, result); }
-                      });
-                    } else {
-                      if (cb) { cb("no role to delete", null); }
-                    }
+	            if (chefconfig.enable) {
+                      if (role) {
+                        chef.editRole(rolename, role, function(err, result) {
+                          if (cb) { cb(err, result); }
+                        });
+                      } else {
+                        if (cb) { cb("no role to delete", null); }
+                      }
+       		    } else {
+		      cb(null, null);
+		    }
                   },
 
   chefDeleteNode: function(nodename, cb) {

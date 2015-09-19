@@ -10,7 +10,7 @@ module.exports = function(params) {
   var ec2 = new AWS.EC2(); 
   var ProjectService = params.models.projectservice;
 
-  var validationpem = fs.readFileSync(__dirname + "/../" + chefconfig.validationpem).toString().split('\n');
+  var validationpem = (chefconfig.enabled ? fs.readFileSync(__dirname + "/../" + chefconfig.validationpem).toString().split('\n') : "");
 
   jobs.process('createservice', function(job, done){
     //console.log(job.data.projectservice);

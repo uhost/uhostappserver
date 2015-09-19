@@ -19,7 +19,9 @@ function chefUser(user) {
   return chefuser;
 }
 
-chef.config(chefoptions);
+if (chefconfig.enable) {
+  chef.config(chefoptions);
+}
 
 module.exports = {
 

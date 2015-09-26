@@ -105,13 +105,17 @@ module.exports = {
             },
 
   chefCreateUser: function(user, cb) {
-                    if (user) {
-                      chef.createDataBagItem('users', chefUser(user), function(err, result) {
-                        if (cb) { cb(err, result); }
-                      });
-                    } else {
-                      if (cb) { cb("no user to create", null); }
-                    }
+	            if (chefconfig.enable) {
+                      if (user) {
+                        chef.createDataBagItem('users', chefUser(user), function(err, result) {
+                          if (cb) { cb(err, result); }
+                        });
+                      } else {
+                        if (cb) { cb("no user to create", null); }
+                      }
+		    } else {
+	              cb(null, null);
+		    }
                   },
 
   chefUpdateUser: function(user, cb) {

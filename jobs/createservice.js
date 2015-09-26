@@ -28,8 +28,12 @@ module.exports = function(params) {
       InstanceType: awsconfig.ec2.InstanceType,
       MinCount: 1, 
       MaxCount: 1,
-      SecurityGroupIds: awsconfig.ec2.SecurityGroupIds,
-      SubnetId: awsconfig.ec2.SubnetId,
+      NetworkInterfaces: [{
+        DeviceIndex: 0,
+	AssociatePublicIpAddress: true,
+	SubnetId: awsconfig.ec2.SubnetId,
+	Groups: awsconfig.ec2.SecurityGroupIds,
+      }],
       KeyName: awsconfig.ec2.KeyName
     };
 

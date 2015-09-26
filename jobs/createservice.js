@@ -23,8 +23,10 @@ module.exports = function(params) {
 
     var nodename = job.data.projectservice.name + "-" + job.data.projectservice.serverids.length+1;
 
+    var imageId = (job.data.serviceid.image ? jobs.data.serviceid.image : awsconfig.ec2.ImageId);
+
     var ec2params = {
-      ImageId: awsconfig.ec2.ImageId,
+      ImageId: imageId,
       InstanceType: awsconfig.ec2.InstanceType,
       MinCount: 1, 
       MaxCount: 1,
@@ -90,7 +92,7 @@ module.exports = function(params) {
   
         // Add tags to the instance
         ec2params = {Resources: [instanceId], Tags: [
-          {Key: 'Name', Value: job.data.projectservice.name}
+          {Key: 'Name', Value: nodename}
         ]};
         ec2.createTags(ec2params, function(err) {
         console.log("Tagging instance", err ? "failure" : "success");

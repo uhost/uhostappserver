@@ -8,6 +8,7 @@ module.exports = function(params) {
   var ServiceSchema = new Schema({
     userid: {type: Object, required: true},
     name: {type: String, required: true},
+    image: {type: String},
     role: {type: String},
     runlist: {type: Array , "default" : []},
     defaultattributes: {type: Schema.Types.Mixed, "default" : []},

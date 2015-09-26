@@ -23,7 +23,7 @@ module.exports = function(params) {
 
     var nodename = job.data.projectservice.name + "-" + job.data.projectservice.serverids.length+1;
 
-    var imageId = (job.data.serviceid.image ? jobs.data.serviceid.image : awsconfig.ec2.ImageId);
+    var imageId = (job.data.projectservice.serviceid.image ? job.data.projectservice.serviceid.image : awsconfig.ec2.ImageId);
 
     var ec2params = {
       ImageId: imageId,

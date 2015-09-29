@@ -42,21 +42,21 @@ module.exports = function(params) {
     var runlist = ['"role[uhost]"', '"role[' + job.data.projectservice.serviceid.role + ']"'];
 
     var userdata = [];
-    if (job.data.projectservice.serviceid.role == "windows") {
+    if (job.data.projectservice.serviceid.operatingsystem == "windows") {
       userdata.push('<powershell>');
       userdata.push('write-output "Running User Data Script"');
       userdata.push('write-host "(host) Running User Data Script"');
       userdata.push('$chef_download_url = "https://opscode-omnibus-packages.s3.amazonaws.com/windows/2008r2/x86_64/chef-client-12.3.0-1.msi"');
       userdata.push('Write-Host "Downloading $chef_download_url"');
-      userdata.push('(New-Object System.Net.WebClient).DownloadFile($chef_download_url, "C:\Windows\Temp\chef-client-12.3.0-1.msi")');
-      userdata.push('cmd /c msiexec /qn /i C:\inst\chef-client-11.8.0-1.windows.msi ADDLOCAL="ChefClientFeature"');
+      userdata.push('(New-Object System.Net.WebClient).DownloadFile($chef_download_url, "C:\\Windows\\Temp\\chef-client-12.3.0-1.msi")');
+      userdata.push('cmd /c msiexec /qn /i C:\\inst\\chef-client-11.8.0-1.windows.msi ADDLOCAL="ChefClientFeature"');
       userdata.push('');
       userdata.push('$validationpem = @"');
       validationpem.forEach(function(line) {
         userdata.push(line);
       });
       userdata.push('"@');
-      userdata.push('$validationpem | Out-File C:\chef\validation.pem');
+      userdata.push('$validationpem | Out-File C:\\chef\\validation.pem');
       userdata.push('');
       userdata.push('$clientrb = @"');
       userdata.push('log_level        :info');
@@ -66,7 +66,7 @@ module.exports = function(params) {
       userdata.push('node_name "' + nodename + '"');
       userdata.push('ssl_verify_mode :verify_none');
       userdata.push('"@');
-      userdata.push('$clientrb | Out-File C:\chef\client.rb');
+      userdata.push('$clientrb | Out-File C:\\chef\\client.rb');
       userdata.push('');
       userdata.push('$firstbootjson = @"');
       userdata.push('{');
@@ -74,10 +74,10 @@ module.exports = function(params) {
       userdata.push('  "run_list": [' + runlist + ']');
       userdata.push('}');
       userdata.push('"@');
-      userdata.push('$clientrb | Out-File C:\chef\first-boot.json');
+      userdata.push('$clientrb | Out-File C:\\chef\\first-boot.json');
       userdata.push('');
       userdata.push('');
-      userdata.push('chef-client -j C:\chef\first-boot.json');
+      userdata.push('chef-client -j C:\\chef\\first-boot.json');
       userdata.push('</powershell>');
     } else {
       userdata.push('#!/bin/bash');

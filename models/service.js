@@ -9,6 +9,7 @@ module.exports = function(params) {
     userid: {type: Object, required: true},
     name: {type: String, required: true},
     image: {type: String},
+    operatingsystem: {type: String},
     role: {type: String},
     runlist: {type: Array , "default" : []},
     defaultattributes: {type: Schema.Types.Mixed, "default" : []},

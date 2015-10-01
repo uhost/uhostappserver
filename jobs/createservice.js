@@ -39,24 +39,24 @@ module.exports = function(params) {
       KeyName: awsconfig.ec2.KeyName
     };
 
-    var runlist = ['"role[uhost]"', '"role[' + job.data.projectservice.serviceid.role + ']"'];
 
     var userdata = [];
     if (job.data.projectservice.serviceid.operatingsystem == "windows") {
+      var runlist = ['"role[uhost-windows]"', '"role[' + job.data.projectservice.serviceid.role + ']"'];
       userdata.push('<powershell>');
       userdata.push('write-output "Running User Data Script"');
       userdata.push('write-host "(host) Running User Data Script"');
       userdata.push('$chef_download_url = "https://opscode-omnibus-packages.s3.amazonaws.com/windows/2008r2/x86_64/chef-client-12.3.0-1.msi"');
       userdata.push('Write-Host "Downloading $chef_download_url"');
       userdata.push('(New-Object System.Net.WebClient).DownloadFile($chef_download_url, "C:\\Windows\\Temp\\chef-client-12.3.0-1.msi")');
-      userdata.push('cmd /c msiexec /qn /i C:\\inst\\chef-client-11.8.0-1.windows.msi ADDLOCAL="ChefClientFeature"');
+      userdata.push('cmd /c msiexec /qn /i C:\\inst\\chef-client-12.3.0-1.msi ADDLOCAL="ChefClientFeature"');
       userdata.push('');
       userdata.push('$validationpem = @"');
       validationpem.forEach(function(line) {
         userdata.push(line);
       });
       userdata.push('"@');
-      userdata.push('$validationpem | Out-File C:\\chef\\validation.pem');
+      userdata.push('$validationpem | Out-File C:\\chef\\validation.pem -encoding "ascii"');
       userdata.push('');
       userdata.push('$clientrb = @"');
       userdata.push('log_level        :info');
@@ -66,20 +66,20 @@ module.exports = function(params) {
       userdata.push('node_name "' + nodename + '"');
       userdata.push('ssl_verify_mode :verify_none');
       userdata.push('"@');
-      userdata.push('$clientrb | Out-File C:\\chef\\client.rb');
+      userdata.push('$clientrb | Out-File C:\\chef\\client.rb -encoding "ascii"');
       userdata.push('');
       userdata.push('$firstbootjson = @"');
-      userdata.push('{');
+      userdata.push('{
       userdata.push('  "servername": "' + nodename + "." + dnsconfig.domainname + '",');
       userdata.push('  "run_list": [' + runlist + ']');
       userdata.push('}');
       userdata.push('"@');
-      userdata.push('$clientrb | Out-File C:\\chef\\first-boot.json');
+      userdata.push('$firstbootjson | Out-File C:\\chef\\first-boot.json -encoding "ascii"');
       userdata.push('');
-      userdata.push('');
-      userdata.push('chef-client -j C:\\chef\\first-boot.json');
+      userdata.push('cmd /c c:\\opscode\\chef\\bin\\chef-client -j C:\\chef\\first-boot.json -L c:\\chef\\first-boot.log');
       userdata.push('</powershell>');
     } else {
+      var runlist = ['"role[uhost]"', '"role[' + job.data.projectservice.serviceid.role + ']"'];
       userdata.push('#!/bin/bash');
       userdata.push('');
       userdata.push('set -x');
@@ -115,7 +115,7 @@ module.exports = function(params) {
       userdata.push('sudo chef-client -j /etc/chef/first-boot.json');
     }
 
-    console.log(userdata.join('\n')); 
+    //console.log(userdata.join('\n')); 
 
     ec2params.UserData = new Buffer(userdata.join('\n')).toString('base64');
 

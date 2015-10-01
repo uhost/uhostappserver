@@ -69,7 +69,7 @@ module.exports = function(params) {
       userdata.push('$clientrb | Out-File C:\\chef\\client.rb -encoding "ascii"');
       userdata.push('');
       userdata.push('$firstbootjson = @"');
-      userdata.push('{
+      userdata.push('{');
       userdata.push('  "servername": "' + nodename + "." + dnsconfig.domainname + '",');
       userdata.push('  "run_list": [' + runlist + ']');
       userdata.push('}');

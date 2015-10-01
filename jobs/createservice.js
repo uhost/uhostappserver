@@ -25,7 +25,7 @@ module.exports = function(params) {
 
     var imageId = (job.data.projectservice.serviceid.image ? job.data.projectservice.serviceid.image : awsconfig.ec2.ImageId);
 
-    var instanceType = (job.data.projectservice.instancetype ? job.data.projectservice.instancetype : awsconfig.ec2.InstanceType);
+    var instanceType = (job.data.projectservice.instancesize ? job.data.projectservice.instancesize : awsconfig.ec2.InstanceType);
 
     var ec2params = {
       ImageId: imageId,

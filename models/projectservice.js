@@ -12,7 +12,7 @@ module.exports = function(params) {
     platformid: {type: ObjectId, required: true, ref: 'Platform'},
     serverids: [ObjectId],
     name: {type: String, required: true},
-    instancetype: {type: String},
+    instancesize: {type: String},
     created: {type: Date, default: Date.now}
   });
 

@@ -51,6 +51,7 @@ module.exports = {
              name: "mochaservice",
              image: "ami-12345678",
 	     operatingsystem: "ubuntu",
+	     instancesize: "m4.large",
              role: "mocharole",
              runlist: ["recipe[python::default]", "recipe[postgresql::server]", "recipe[helios::default]", "recipe[helios::upstart]", "recipe[helios::nginx]"],
              defaultattributes: [{helios: {

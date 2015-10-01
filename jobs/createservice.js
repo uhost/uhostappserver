@@ -51,7 +51,7 @@ module.exports = function(params) {
       userdata.push('$chef_download_url = "https://opscode-omnibus-packages.s3.amazonaws.com/windows/2008r2/x86_64/chef-client-12.3.0-1.msi"');
       userdata.push('Write-Host "Downloading $chef_download_url"');
       userdata.push('(New-Object System.Net.WebClient).DownloadFile($chef_download_url, "C:\\Windows\\Temp\\chef-client-12.3.0-1.msi")');
-      userdata.push('cmd /c msiexec /qn /i C:\\inst\\chef-client-12.3.0-1.msi ADDLOCAL="ChefClientFeature"');
+      userdata.push('cmd /c msiexec /qn /i C:\\Windows\\Temp\\chef-client-12.3.0-1.msi  ADDLOCAL="ChefClientFeature"');
       userdata.push('');
       userdata.push('$validationpem = @"');
       validationpem.forEach(function(line) {
@@ -117,7 +117,7 @@ module.exports = function(params) {
       userdata.push('sudo chef-client -j /etc/chef/first-boot.json');
     }
 
-    //console.log(userdata.join('\n')); 
+    console.log(userdata.join('\n')); 
 
     ec2params.UserData = new Buffer(userdata.join('\n')).toString('base64');
 

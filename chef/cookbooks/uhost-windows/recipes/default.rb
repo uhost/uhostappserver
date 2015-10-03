@@ -8,7 +8,7 @@
 #
 #
 
-include_recipe "uhost-windows::hostsfile"
+#include_recipe "uhost-windows::hostsfile"
 
 include_recipe 'chocolatey'
 

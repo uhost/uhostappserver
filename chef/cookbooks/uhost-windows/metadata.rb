@@ -10,6 +10,6 @@ version          '0.1.0'
   supports os
 end
 
-%w{ hostsfile chocolatey }.each do |cb|
+%w{ hostsfile chocolatey windows }.each do |cb|
   depends cb
 end

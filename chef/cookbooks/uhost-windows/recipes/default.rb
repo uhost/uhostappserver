@@ -8,14 +8,15 @@
 #
 #
 
+## TODO: get hostsfile to work with cloud or ec2
 #include_recipe "uhost-windows::hostsfile"
 
 include_recipe 'chocolatey'
 
-%w{bash grep}.each do |pack|
-  chocolatey pack do
-    source 'cygwin'
-  end
+%w{cygwin cyg-get googlechrome}.each do |pack|
+  chocolatey pack
 end
+
+## TODO: Add cyg-get calls
 
 

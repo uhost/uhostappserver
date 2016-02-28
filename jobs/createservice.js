@@ -48,10 +48,10 @@ module.exports = function(params) {
       userdata.push('<powershell>');
       userdata.push('write-output "Running User Data Script"');
       userdata.push('write-host "(host) Running User Data Script"');
-      userdata.push('$chef_download_url = "https://opscode-omnibus-packages.s3.amazonaws.com/windows/2008r2/x86_64/chef-client-12.3.0-1.msi"');
+      userdata.push('$chef_download_url = "https://opscode-omnibus-packages.s3.amazonaws.com/windows/2012r2/i386/chef-client-12.7.2-1-x86.msi"');
       userdata.push('Write-Host "Downloading $chef_download_url"');
-      userdata.push('(New-Object System.Net.WebClient).DownloadFile($chef_download_url, "C:\\Windows\\Temp\\chef-client-12.3.0-1.msi")');
-      userdata.push('cmd /c msiexec /qn /i C:\\Windows\\Temp\\chef-client-12.3.0-1.msi  ADDLOCAL="ChefClientFeature"');
+      userdata.push('(New-Object System.Net.WebClient).DownloadFile($chef_download_url, "C:\\Windows\\Temp\\chef-client-12.7.2-1.msi")');
+      userdata.push('cmd /c msiexec /qn /i C:\\Windows\\Temp\\chef-client-12.7.2-1.msi  ADDLOCAL="ChefClientFeature"');
       userdata.push('');
       userdata.push('$validationpem = @"');
       validationpem.forEach(function(line) {
@@ -87,7 +87,7 @@ module.exports = function(params) {
       userdata.push('set -x');
       userdata.push('');
       userdata.push('wget -P /tmp https://www.chef.io/chef/install.sh');
-      userdata.push('bash /tmp/install.sh -v 12.3.0-1');
+      userdata.push('bash /tmp/install.sh -v ' + chefconfig.chef_client_version);
       userdata.push('mkdir -p /etc/chef');
       userdata.push('cat << EOF | sudo tee /etc/chef/validation.pem > /dev/null');
       validationpem.forEach(function(line) {

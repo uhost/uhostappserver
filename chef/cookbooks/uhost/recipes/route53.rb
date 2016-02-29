@@ -21,7 +21,3 @@ route53_record "create a dns entry " + node["servername"] do
   overwrite true
 end
 
-hostsfile_entry node["cloud"]["public_ipv4"] do
-  hostname  node["servername"]
-  action    :append
-end

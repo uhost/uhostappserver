@@ -2,7 +2,7 @@
 # Cookbook Name:: uhost
 # Recipe:: default
 #
-# Copyright (C) 2015 YOUR_NAME
+# Copyright (C) 2015 Mark C Allen
 #
 # All rights reserved - Do Not Redistribute
 #
@@ -13,10 +13,12 @@
 
 include_recipe 'chocolatey'
 
-%w{cygwin cyg-get googlechrome}.each do |pack|
+include_recipe 'cygwin::default'
+
+%w{googlechrome}.each do |pack|
   chocolatey pack
 end
 
-## TODO: Add cyg-get calls
-
-
+cygwin_package 'curl' do
+    action :install
+end
